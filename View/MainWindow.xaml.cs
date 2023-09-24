@@ -10,13 +10,13 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ViewModel;
 
-namespace HospitalMVVM
+namespace View
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Логика взаимодействия для Window1.xaml
     /// </summary>
     public partial class MainWindow : Window
     {

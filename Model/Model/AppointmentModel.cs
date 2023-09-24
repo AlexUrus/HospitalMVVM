@@ -11,22 +11,19 @@ namespace Model.Model
 {
     public class AppointmentModel
     {
-        public int Id { get; }
-        public DoctorModel DoctorModel { get; set; }
-        public PatientModel PatientModel { get; set; }
+        public int Id { get; private set; }
+        public DoctorModel DoctorModel { get; private set; }
+        public PatientModel PatientModel { get; private set; }
         public AppointmentTimeModel AppointmentTimeModel { get; set; }
 
         private DataRepository _dataRepository = DataRepository.Instance;
 
-        private void SaveAppointment(PatientModel patientModel, DoctorModel doctorModel, AppointmentTimeModel appointmentTimeModel)
+        public AppointmentModel(int id, DoctorModel doctorModel, PatientModel patientModel, AppointmentTimeModel appointmentTimeModel)
         {
-            _dataRepository.SetAppointment(new AppointmentModel()
-            {
-                DoctorModel = doctorModel,
-                PatientModel = patientModel,
-                AppointmentTimeModel = appointmentTimeModel
-            });
+            Id = id;
+            DoctorModel = doctorModel;
+            PatientModel = patientModel;
+            AppointmentTimeModel = appointmentTimeModel;
         }
     }
-
 }

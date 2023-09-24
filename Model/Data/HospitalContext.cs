@@ -14,6 +14,7 @@ namespace Model.Data
         public virtual DbSet<AppointmentTime> AppointmentTimes { get; set; }
         public virtual DbSet<Doctor> Doctors { get; set; }
         public virtual DbSet<Patient> Patients { get; set; }
+        public virtual DbSet<TypeDoctor> TypeDoctors { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

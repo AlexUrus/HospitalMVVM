@@ -1,9 +1,6 @@
-﻿using DynamicData;
-using Model.Model;
+﻿using Model.Model;
 using ReactiveUI;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using Model.EFModel;
+
 
 namespace ViewModel
 {

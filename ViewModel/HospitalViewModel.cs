@@ -1,25 +1,33 @@
-﻿using Model.Model;
+﻿using Model.Data;
+using Model.Model;
 using ReactiveUI;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ViewModel
 {
-    public class MainViewModel : ReactiveObject
+    public class HospitalViewModel : ReactiveObject
     {
-
         #region Fields
+        private DataRepository _dataRepository { get; set; }
+        private HospitalModel _hospitalModel { get; set; }
+
         private PatientViewModel _patientViewModel;
         private DoctorViewModel _doctorViewModel;
         private AppointmentTimeViewModel _appointmentTimeViewModel;
         private AppointmentViewModel _appointmentViewModel;
         private bool _canCreateAppointment;
-
-        private HospitalModel _hospitalModel;
         #endregion
 
         #region Properties
+        public ObservableCollection<DoctorModel> DoctorModels { get; set; }
+        public ObservableCollection<AppointmentTimeModel> AppointmentTimeModels { get; set; }
         public PatientViewModel PatientViewModel
         {
             get => _patientViewModel;
@@ -35,6 +43,7 @@ namespace ViewModel
             get => _appointmentTimeViewModel;
             private set => this.RaiseAndSetIfChanged(ref _appointmentTimeViewModel, value);
         }
+        
         public bool CanCreateAppointment
         {
             get => _canCreateAppointment;
@@ -45,8 +54,7 @@ namespace ViewModel
         #region Commands
         public ReactiveCommand<Unit, Unit> CreateAppointmentCommand { get; }
         #endregion
-
-        public MainViewModel()
+        public HospitalViewModel()
         {
             _hospitalModel = HospitalModel.Instance;
 
@@ -54,6 +62,9 @@ namespace ViewModel
             _doctorViewModel = new DoctorViewModel();
             _appointmentTimeViewModel = new AppointmentTimeViewModel();
             _appointmentViewModel = new AppointmentViewModel();
+
+            AppointmentTimeModels = _hospitalModel.AppointmentTimeModels;
+            DoctorModels = _hospitalModel.DoctorModels;
 
             CreateAppointmentCommand = ReactiveCommand.Create(CreateAppointment);
             // Создаем реактивную последовательность для отслеживания изменений
@@ -75,17 +86,30 @@ namespace ViewModel
                 .Subscribe(_ => UpdateAppointmentsTimeDoctor());
         }
 
+        public void CreatePatient()
+        {
+            _hospitalModel.CreatePatient(_patientViewModel.PatientName, _patientViewModel.PatientSurname);
+        }
+
+        public void CreateAppointment()
+        {
+            CreatePatient();
+
+            PatientModel patientModel = _hospitalModel.GetPatientModel(_patientViewModel.PatientName, _patientViewModel.PatientSurname);
+            DoctorModel doctorModel = _doctorViewModel.SelectedDoctor;
+            AppointmentTimeModel appointmentTimeModel = _appointmentTimeViewModel.SelectedAppointmentTimeModel;
+
+            _hospitalModel.CreateAppointment(patientModel, doctorModel, appointmentTimeModel);
+
+            ClearInputFieldsAndSelections();
+        }
+
         private void UpdateCanCreateAppointment()
         {
             CanCreateAppointment = _appointmentTimeViewModel.SelectedAppointmentTimeModel is not null
                 && _doctorViewModel.SelectedDoctor is not null
                 && !string.IsNullOrWhiteSpace(_patientViewModel.PatientName)
                 && !string.IsNullOrWhiteSpace(_patientViewModel.PatientSurname);
-        }
-
-        public void CreateAppointment()
-        {
-            _hospitalModel.CreateAppointment();
         }
 
         private void ClearInputFieldsAndSelections()
@@ -95,12 +119,7 @@ namespace ViewModel
             _doctorViewModel.SelectedDoctor = null;
             _appointmentTimeViewModel.SelectedAppointmentTimeModel = null;
         }
-
-        private void CreatePatient()
-        {
-            _hospitalModel.CreatePatient(_patientViewModel.PatientName,_patientViewModel.PatientSurname);
-        }
-
+        
         private void UpdateAppointmentsTimeDoctor()
         {
             /*
@@ -108,11 +127,8 @@ namespace ViewModel
             {
                 _appointmentTimeViewModel.DublicateAllAppointmentTime();
                 _appointmentTimeViewModel.RemoveBookedTimes(_doctorViewModel.GetFreeTimeDoctor());
-            }*/
+            }
+            */
         }
-
-
-
-
     }
 }

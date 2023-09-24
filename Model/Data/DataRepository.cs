@@ -32,17 +32,37 @@ namespace Model.Data
             _context = new HospitalContext();
         }
 
-        public void SetAppointment(AppointmentModel appointmentModel)
+        public void CreateAppointment(PatientModel patientModel, DoctorModel doctorModel, AppointmentTimeModel appointmentTimeModel)
         {
             try
-            {
-                Appointment appointment = ConvertModelToEf(appointmentModel);
+            { 
+                Appointment appointment = new Appointment() {Patient = ConvertModelToEf(patientModel), 
+                    Doctor = ConvertModelToEf(doctorModel), AppointmentTime = ConvertModelToEf(appointmentTimeModel) };
+
                 _context.Appointments.Add(appointment);
                 _context.SaveChanges();
             }
             catch (Exception)
             {
 
+                throw;
+            }
+        }
+
+        public AppointmentModel GetAppointmentModel(PatientModel patientModel, DoctorModel doctorModel, AppointmentTimeModel appointmentTimeModel)
+        {
+            try
+            {
+                Patient patient = ConvertModelToEf(patientModel);
+                Doctor doctor = ConvertModelToEf(doctorModel);
+                AppointmentTime appointmentTime = ConvertModelToEf(appointmentTimeModel);
+
+                Appointment appointment = _context.Appointments.FirstOrDefault(p => p.Patient == patient && p.Doctor == doctor && p.AppointmentTime == appointmentTime);
+
+                return new AppointmentModel(appointment.Id, doctorModel, patientModel, appointmentTimeModel);
+            }
+            catch (Exception ex)
+            {
                 throw;
             }
         }
@@ -61,6 +81,7 @@ namespace Model.Data
                 throw;
             }
         }
+
         public bool PatientExists(string name, string surname)
         {
             try
@@ -71,6 +92,73 @@ namespace Model.Data
             catch (Exception ex)
             {
                 Console.WriteLine($"Error checking patient existence: {ex.Message}");
+                throw;
+            }
+        }
+
+        public PatientModel GetPatientModel(string name, string surname)
+        {
+            try
+            {
+                Patient patient = _context.Patients.FirstOrDefault(p => p.Name == name && p.Surname == surname);
+                return new PatientModel(patient.Id, patient.Name, patient.Surname);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public void CreateDoctors()
+        {
+            List<TypeDoctor> typeDoctors = GetTypeDoctors();
+            List<Doctor> doctors = new List<Doctor>()
+            {
+                    new Doctor()
+                    {
+                        Name = "Иван",
+                        Surname = "Иванов",
+                        Type = typeDoctors.FirstOrDefault(t => t.Type == "Терапевт")
+                    },
+                    new Doctor()
+                    {
+                        Name = "Михаил",
+                        Surname = "Михайлов",
+                        Type = typeDoctors.FirstOrDefault(t => t.Type == "Дерматолог")
+                    },
+                    new Doctor()
+                    {
+                        Name = "Петр",
+                        Surname = "Петров",
+                        Type = typeDoctors.FirstOrDefault(t => t.Type == "ЛОР")
+                    },
+                    new Doctor()
+                    {
+                        Name = "Сидр",
+                        Surname = "Сидоров",
+                        Type = typeDoctors.FirstOrDefault(t => t.Type == "Психолог")
+                    },
+                    new Doctor()
+                    {
+                        Name = "Александр",
+                        Surname = "Александров",
+                        Type = typeDoctors.FirstOrDefault(t => t.Type == "Гастроэнтеролог")
+                    }
+            };
+
+            _context.Doctors.AddRange(doctors);
+            _context.SaveChanges();
+        }
+
+        public DoctorModel GetDoctorModel(string name, string surname)
+        {
+            try
+            {
+                Doctor doctor = _context.Doctors.FirstOrDefault(p => p.Name == name && p.Surname == surname);
+                return new DoctorModel(doctor.Id, doctor.Name, doctor.Surname, new TypeDoctorModel(doctor.Type.Id, doctor.Type.Type));
+            }
+            catch (Exception ex)
+            {
                 throw;
             }
         }
@@ -90,22 +178,22 @@ namespace Model.Data
             }
         }
 
-        public List<AppointmentTimeModel> GetListFreeTimesDoctor(DoctorModel doctorModel)
+        public ObservableCollection<AppointmentTimeModel> GetListFreeTimesDoctor(DoctorModel doctorModel)
         {
             try
             {
-                List<Appointment> appointments = _context.Appointments
-                                            .Where(a => a.Doctor == ConvertModelToEf(doctorModel)).Distinct().ToList();
+                ObservableCollection<AppointmentTimeModel> allAppointmentTimes = GetAppointmentTimes();
 
-                List<AppointmentTimeModel> appointmentTimeModels = new List<AppointmentTimeModel>();
-                foreach (Appointment appointment in appointments)
-                {
-                    appointmentTimeModels.Add(
-                        new AppointmentTimeModel(appointment.AppointmentTime.Id,
-                        appointment.AppointmentTime.StartTime, appointment.AppointmentTime.EndTime));
-                }
+                var busyTimes = _context.Appointments
+                    .Where(a => a.Doctor == ConvertModelToEf(doctorModel))
+                    .Select(a => a.AppointmentTime.Id)
+                    .ToList();
 
-                return appointmentTimeModels;
+                var freeTimes = allAppointmentTimes
+                    .Where(time => !busyTimes.Contains(time.Id))
+                    .ToList();
+
+                return new ObservableCollection<AppointmentTimeModel>(freeTimes);
             }
             catch (Exception ex)
             {
@@ -114,39 +202,17 @@ namespace Model.Data
             }
         }
 
-        public ObservableCollection<AppointmentModel> GetAppointmentList()
-        {
-            ObservableCollection<AppointmentModel> appointmentModels = new ObservableCollection<AppointmentModel>();
-            try
-            {
-                List<Appointment> appointmentlist = _context.Appointments.ToList();
-                foreach (Appointment appointment in appointmentlist)
-                {
-                    appointmentModels.Add(new AppointmentModel
-                    {
-                        AppointmentTimeModel = new AppointmentTimeModel(appointment.AppointmentTime.Id, appointment.AppointmentTime.StartTime, appointment.AppointmentTime.EndTime),
-                        DoctorModel = new DoctorModel(appointment.Doctor.Id, appointment.Doctor.Name, appointment.Doctor.Surname, appointment.Doctor.Type),
-                        PatientModel = new PatientModel(appointment.Patient.Id, appointment.Patient.Name, appointment.Patient.Surname)
-                    });
-                }
-                return appointmentModels;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public ObservableCollection<DoctorModel> GetDoctors()
+        public ObservableCollection<DoctorModel> GetDoctorModels()
         {
             ObservableCollection<DoctorModel> doctorModels;
             try
             {
                 List<Doctor> listDoctor = _context.Doctors.ToList();
                 doctorModels = new ObservableCollection<DoctorModel>();
+
                 foreach (Doctor doctor in listDoctor)
                 {
-                    doctorModels.Add(new DoctorModel(doctor.Id, doctor.Name, doctor.Surname, doctor.Type));
+                    doctorModels.Add(new DoctorModel(doctor.Id, doctor.Name, doctor.Surname, new TypeDoctorModel(doctor.Type.Id, doctor.Type.Type)));
                 }
 
                 return doctorModels;
@@ -176,46 +242,6 @@ namespace Model.Data
 
                 throw;
             }
-        }
-
-        public void CreateDoctors()
-        {
-            List<Doctor> doctors = new List<Doctor>()
-            {
-                    new Doctor()
-                    {
-                        Name = "Иван",
-                        Surname = "Иванов",
-                        Type = new TypeDoctor{ Type = "Терапевт"}
-                    },
-                    new Doctor()
-                    {
-                        Name = "Михаил",
-                        Surname = "Михайлов",
-                        Type = new TypeDoctor{ Type = "Дерматолог"}
-                    },
-                    new Doctor()
-                    {
-                        Name = "Петр",
-                        Surname = "Петров",
-                        Type = new TypeDoctor { Type = "ЛОР" }
-                    },
-                    new Doctor()
-                    {
-                        Name = "Сидр",
-                        Surname = "Сидоров",
-                        Type = new TypeDoctor { Type = "Психолог" }
-                    },
-                    new Doctor()
-                    {
-                        Name = "Александр",
-                        Surname = "Александров",
-                        Type = new TypeDoctor { Type = "Гастроэнтеролог" }
-                    }
-            };
-
-            _context.Doctors.AddRange(doctors);
-            _context.SaveChanges();
         }
 
         public void CreateAppointmentTimes()
@@ -248,6 +274,70 @@ namespace Model.Data
             _context.SaveChanges();
         }
 
+        public void CreateTypeDoctorModels()
+        {
+            List<TypeDoctor> typeDoctors = new List<TypeDoctor>()
+            {
+                new TypeDoctor()
+                {
+                    Type = "Терапевт"
+                },
+                new TypeDoctor()
+                {
+                    Type = "Дерматолог"
+                },
+                new TypeDoctor()
+                {
+                    Type = "ЛОР"
+                },
+                new TypeDoctor()
+                {
+                    Type = "Психолог"
+                },
+                new TypeDoctor()
+                {
+                    Type = "Гастроэнтеролог"
+                },
+            };
+
+            _context.TypeDoctors.AddRange(typeDoctors);
+            _context.SaveChanges();
+        }
+        private List<TypeDoctor> GetTypeDoctors()
+        {
+            try
+            { 
+                return _context.TypeDoctors.ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public ObservableCollection<TypeDoctorModel> GetTypeDoctorModels()
+        {
+            ObservableCollection<TypeDoctorModel> typeDoctorModels;
+            try
+            {
+                List<TypeDoctor> listTypeDoctors = _context.TypeDoctors.ToList();
+                typeDoctorModels = new ObservableCollection<TypeDoctorModel>();
+
+                foreach (TypeDoctor typeDoctor in listTypeDoctors)
+                {
+                    typeDoctorModels.Add(new TypeDoctorModel(typeDoctor.Id, typeDoctor.Type));
+                }
+
+                return typeDoctorModels;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        #region ConvertModelToEf
         public Patient ConvertModelToEf(PatientModel patientModel)
         {
             Patient patient = new Patient()
@@ -260,33 +350,27 @@ namespace Model.Data
 
         public Doctor ConvertModelToEf(DoctorModel doctorModel)
         {
-            Doctor doctor = new Doctor()
-            {
-                Surname = doctorModel.Surname,
-                Name = doctorModel.Name
-            };
+            Doctor doctor = _context.Doctors.FirstOrDefault(d => d.Id == doctorModel.Id);
             return doctor;
         }
 
         public AppointmentTime ConvertModelToEf(AppointmentTimeModel appointmentTimeModel)
         {
-            AppointmentTime appointmentTime = new AppointmentTime()
-            {
-                StartTime = appointmentTimeModel.StartTime,
-                EndTime = appointmentTimeModel.EndTime
-            };
+            AppointmentTime appointmentTime = _context.AppointmentTimes.FirstOrDefault(a => a.Id == appointmentTimeModel.Id);
             return appointmentTime;
         }
 
         public Appointment ConvertModelToEf(AppointmentModel appointmentModel)
         {
-            Appointment appointment = new Appointment()
-            {
-                AppointmentTime = ConvertModelToEf(appointmentModel.AppointmentTimeModel),
-                Doctor = ConvertModelToEf(appointmentModel.DoctorModel),
-                Patient = ConvertModelToEf(appointmentModel.PatientModel)
-            };
+            Appointment appointment = _context.Appointments.FirstOrDefault(a => a.Id == appointmentModel.Id);
             return appointment;
         }
+
+        public TypeDoctor ConvertModelToEf(TypeDoctorModel typeDoctorModel)
+        {
+            TypeDoctor typeDoctor = _context.TypeDoctors.FirstOrDefault(a => a.Id == typeDoctorModel.Id);
+            return typeDoctor;
+        }
+        #endregion
     }
 }

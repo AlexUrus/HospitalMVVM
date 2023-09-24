@@ -5,22 +5,19 @@ namespace ViewModel
 {
     public class PatientViewModel : ReactiveObject
     {
-        private PatientModel _patientModel { get; set; }
+        //private PatientModel? _patientModel { get; set; }
+        private string? _patientName;
+        private string? _patientSurname;
         public string? PatientName
         {
-            get => _patientModel.Name;
-            set => this.RaisePropertyChanged(nameof(PatientName));
+            get => _patientName;
+            set => this.RaiseAndSetIfChanged(ref _patientName, value);
         }
 
         public string? PatientSurname
         {
-            get => _patientModel.Surname;
-            set => this.RaisePropertyChanged(nameof(PatientSurname));
-        }
-
-        public void CreatePatient()
-        {
-            _patientModel.
+            get => _patientSurname;
+            set => this.RaiseAndSetIfChanged(ref _patientSurname, value);
         }
 
     }
