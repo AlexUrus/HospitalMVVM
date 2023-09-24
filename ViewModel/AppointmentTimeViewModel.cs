@@ -12,8 +12,6 @@ namespace ViewModel
         {
             get => _selectedAppointmentTimeModel;
             set => this.RaiseAndSetIfChanged(ref _selectedAppointmentTimeModel, value);
-        }
-        
+        } 
     }
-
 }

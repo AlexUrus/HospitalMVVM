@@ -35,22 +35,9 @@ namespace ViewModel
             }
         }
 
-        public bool IsFreeDoctorInTime(AppointmentTimeModel appointmentTimeModel)
-        {
-            return _selectedDoctor.IsFreeDoctorInTime(appointmentTimeModel);
-        }
-
-        public ObservableCollection<AppointmentTimeModel> GetFreeTimeDoctor()
-        {
-            return _selectedDoctor.GetFreeTimeDoctor();
-        }
-
         private void UpdateListTakenTimesDoctor()
         {
             ListTakenTimesDoctor = SelectedDoctor?.ListFreeTimesDoctor;
         }
-
-
     }
-
 }

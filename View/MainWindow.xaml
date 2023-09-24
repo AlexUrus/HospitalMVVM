@@ -29,7 +29,7 @@
             <ComboBox  ItemsSource="{Binding DoctorViewModel.ListTakenTimesDoctor}" Height="27" SelectedItem="{Binding AppointmentTimeViewModel.SelectedAppointmentTimeModel}">
 			</ComboBox>
 			<Separator Opacity="0" Height="100"/>
-			<Button Content="Записаться на прием" Command="{Binding CreateAppointmentCommand}" IsEnabled="{Binding CanCreateAppointment}"/>
-		</StackPanel>
+            <Button Content="Записаться на прием" Command="{Binding CreateAppointmentCommand}" IsEnabled="{Binding CanCreateAppointment}"/>
+        </StackPanel>
 	</Grid>
 </Window>

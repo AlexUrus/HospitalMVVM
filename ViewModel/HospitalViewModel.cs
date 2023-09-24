@@ -1,21 +1,14 @@
-﻿using Model.Data;
-using Model.Model;
+﻿using Model.Model;
 using ReactiveUI;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ViewModel
 {
     public class HospitalViewModel : ReactiveObject
     {
         #region Fields
-        private DataRepository _dataRepository { get; set; }
         private HospitalModel _hospitalModel { get; set; }
 
         private PatientViewModel _patientViewModel;
@@ -53,6 +46,7 @@ namespace ViewModel
 
         #region Commands
         public ReactiveCommand<Unit, Unit> CreateAppointmentCommand { get; }
+        public Interaction<string, Unit> ShowMessageBox { get; } = new Interaction<string, Unit>();
         #endregion
         public HospitalViewModel()
         {
@@ -81,17 +75,14 @@ namespace ViewModel
             var combinedPropertiesUpdateAppTime = this.WhenAnyValue(
             x => x._doctorViewModel.SelectedDoctor);
 
-            // Подписываемся на изменения свойств и вызываем UpdateCanCreateAppointment
-            combinedPropertiesUpdateAppTime
-                .Subscribe(_ => UpdateAppointmentsTimeDoctor());
         }
 
-        public void CreatePatient()
+        private void CreatePatient()
         {
             _hospitalModel.CreatePatient(_patientViewModel.PatientName, _patientViewModel.PatientSurname);
         }
 
-        public void CreateAppointment()
+        private void CreateAppointment()
         {
             CreatePatient();
 
@@ -100,6 +91,8 @@ namespace ViewModel
             AppointmentTimeModel appointmentTimeModel = _appointmentTimeViewModel.SelectedAppointmentTimeModel;
 
             _hospitalModel.CreateAppointment(patientModel, doctorModel, appointmentTimeModel);
+
+            ShowMessageBox.Handle("Прием успешно создан!").Subscribe();
 
             ClearInputFieldsAndSelections();
         }
@@ -118,17 +111,6 @@ namespace ViewModel
             _patientViewModel.PatientSurname = "";
             _doctorViewModel.SelectedDoctor = null;
             _appointmentTimeViewModel.SelectedAppointmentTimeModel = null;
-        }
-        
-        private void UpdateAppointmentsTimeDoctor()
-        {
-            /*
-            if (_doctorViewModel.SelectedDoctor is not null)
-            {
-                _appointmentTimeViewModel.DublicateAllAppointmentTime();
-                _appointmentTimeViewModel.RemoveBookedTimes(_doctorViewModel.GetFreeTimeDoctor());
-            }
-            */
         }
     }
 }

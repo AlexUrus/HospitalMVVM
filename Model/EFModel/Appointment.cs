@@ -8,6 +8,8 @@ namespace Model.EFModel
 {
     public class Appointment
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public Doctor Doctor { get; set; }
         public Patient Patient { get; set; }
