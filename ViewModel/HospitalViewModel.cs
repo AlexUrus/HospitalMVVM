@@ -46,7 +46,6 @@ namespace ViewModel
 
         #region Commands
         public ReactiveCommand<Unit, Unit> CreateAppointmentCommand { get; }
-        public Interaction<string, Unit> ShowMessageBox { get; } = new Interaction<string, Unit>();
         #endregion
         public HospitalViewModel()
         {
@@ -91,8 +90,6 @@ namespace ViewModel
             AppointmentTimeModel appointmentTimeModel = _appointmentTimeViewModel.SelectedAppointmentTimeModel;
 
             _hospitalModel.CreateAppointment(patientModel, doctorModel, appointmentTimeModel);
-
-            ShowMessageBox.Handle("Прием успешно создан!").Subscribe();
 
             ClearInputFieldsAndSelections();
         }
