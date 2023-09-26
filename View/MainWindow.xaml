@@ -5,31 +5,35 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:ViewModel;assembly=ViewModel"
         mc:Ignorable="d"
-        Title="Window1" Height="450" Width="800">
+        Title="Hospital"  Height="450" Width="400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <vm:HospitalViewModel/>
-    </Window.DataContext>	
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="27*"/>
-		</Grid.RowDefinitions>
+    </Window.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="40*"/>
+            <ColumnDefinition Width="56*"/>
+            <ColumnDefinition Width="140*"/>
+            <ColumnDefinition Width="56*"/>
+            <ColumnDefinition Width="40*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30*"/>
+            <RowDefinition Height="365*"/>
+            <RowDefinition Height="40*"/>
+        </Grid.RowDefinitions>
 
-		<StackPanel Grid.Row="0" Grid.Column="0">
-			<Label Height="27" Content="Введите имя:" />
-			<TextBox x:Name="NameTextBox" Height="27" Text="{Binding PatientViewModel.PatientName}">
-			</TextBox>
-			<Label Height="27" Content="Введите фамилию:" />
-			<TextBox x:Name="SurnameTextBox" Height="27" Text="{Binding PatientViewModel.PatientSurname}">
-			</TextBox>
-			<Label Height="27" Content="Выберите врача:" />
-			<ComboBox ItemsSource="{Binding DoctorModels}" Height="27" SelectedItem="{Binding DoctorViewModel.SelectedDoctor}">
+        <StackPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Grid.RowSpan="2" >
+            <Label Content="Введите имя:" Height="27" FontSize="14"/>
+            <TextBox x:Name="NameTextBox" Height="27" Text="{Binding PatientViewModel.PatientName}" FontSize="14" />
+            <Label Content="Введите фамилию:"  Height="27" FontSize="14"/>
+            <TextBox x:Name="SurnameTextBox" Height="27" Text="{Binding PatientViewModel.PatientSurname}" FontSize="14"/>
+            <Label Content="Выберите врача:" Height="27" FontSize="14"/>
+            <ComboBox Height="27" FontSize="14" ItemsSource="{Binding DoctorModels}" SelectedItem="{Binding DoctorViewModel.SelectedDoctor}"/>
+            <Label Content="Выберите время приема:" Height="27" FontSize="14"/>
+            <ComboBox Height="27" FontSize="14" ItemsSource="{Binding DoctorViewModel.ListTakenTimesDoctor}" SelectedItem="{Binding AppointmentTimeViewModel.SelectedAppointmentTimeModel}"/>
 
-			</ComboBox>
-			<Label Height="27" Content="Выберите время приема:" />
-            <ComboBox  ItemsSource="{Binding DoctorViewModel.ListTakenTimesDoctor}" Height="27" SelectedItem="{Binding AppointmentTimeViewModel.SelectedAppointmentTimeModel}">
-			</ComboBox>
-			<Separator Opacity="0" Height="100"/>
-            <Button Content="Записаться на прием" Command="{Binding CreateAppointmentCommand}" IsEnabled="{Binding CanCreateAppointment}"/>
         </StackPanel>
-	</Grid>
+        <Button Height="27" FontSize="14" Content="Записаться на прием" Grid.Row="1" Grid.Column="2" VerticalAlignment="Bottom" Command="{Binding CreateAppointmentCommand}" IsEnabled="{Binding CanCreateAppointment}" />
+    </Grid>
 </Window>

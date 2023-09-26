@@ -60,14 +60,13 @@ namespace ViewModel
             DoctorModels = _hospitalModel.DoctorModels;
 
             CreateAppointmentCommand = ReactiveCommand.Create(CreateAppointment);
-            // Создаем реактивную последовательность для отслеживания изменений
+
             var combinedPropertiesUpdateCanCreate = this.WhenAnyValue(
                 x => x._patientViewModel.PatientName,
                 x => x._patientViewModel.PatientSurname,
                 x => x._doctorViewModel.SelectedDoctor,
                 x => x._appointmentTimeViewModel.SelectedAppointmentTimeModel);
 
-            // Подписываемся на изменения свойств и вызываем UpdateCanCreateAppointment
             combinedPropertiesUpdateCanCreate
                 .Subscribe(_ => UpdateCanCreateAppointment());
 
