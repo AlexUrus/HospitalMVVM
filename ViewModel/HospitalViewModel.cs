@@ -61,7 +61,7 @@ namespace ViewModel
             {
                 if (_openMessageWindow == null)
                 {
-                    _openMessageWindow = new OpenMessageWindowCommand(this);
+                    //_openMessageWindow = new OpenMessageWindowCommand(this);
                 }
                 return _openMessageWindow;
             }
@@ -113,7 +113,7 @@ namespace ViewModel
             }
             else
             {
-
+                // вывод сообщения Пациент существует
             }
 
             ClearInputFieldsAndSelections();
