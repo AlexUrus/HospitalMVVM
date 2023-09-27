@@ -3,6 +3,8 @@ using ReactiveUI;
 using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Windows.Input;
+
 
 namespace ViewModel
 {
@@ -14,7 +16,8 @@ namespace ViewModel
         private PatientViewModel _patientViewModel;
         private DoctorViewModel _doctorViewModel;
         private AppointmentTimeViewModel _appointmentTimeViewModel;
-        private AppointmentViewModel _appointmentViewModel;
+        private MessageViewModel _messageViewModel;
+
         private bool _canCreateAppointment;
         #endregion
 
@@ -36,7 +39,13 @@ namespace ViewModel
             get => _appointmentTimeViewModel;
             private set => this.RaiseAndSetIfChanged(ref _appointmentTimeViewModel, value);
         }
-        
+
+        public MessageViewModel MessgeViewModel
+        {
+            get => _messageViewModel;
+            private set => this.RaiseAndSetIfChanged(ref _messageViewModel, value);
+        }
+
         public bool CanCreateAppointment
         {
             get => _canCreateAppointment;
@@ -45,34 +54,78 @@ namespace ViewModel
         #endregion
 
         #region Commands
+        private ICommand _openMessageWindow;
+        public ICommand OpenMessageWindow
+        {
+            get
+            {
+                if (_openMessageWindow == null)
+                {
+                    _openMessageWindow = new OpenMessageWindowCommand(this);
+                }
+                return _openMessageWindow;
+            }
+        }
         public ReactiveCommand<Unit, Unit> CreateAppointmentCommand { get; }
         #endregion
         public HospitalViewModel()
-        {
-            _hospitalModel = HospitalModel.Instance;
+        {  
+            InitViewModels();
+            InitModels();
+            InitAndSubscribeUpdateCanCreate();
 
+            CreateAppointmentCommand = ReactiveCommand.Create(CallCreateAppointment);
+        }
+
+        private void InitViewModels()
+        {
             _patientViewModel = new PatientViewModel();
             _doctorViewModel = new DoctorViewModel();
             _appointmentTimeViewModel = new AppointmentTimeViewModel();
-            _appointmentViewModel = new AppointmentViewModel();
+            _messageViewModel = new MessageViewModel();
+        }
 
-            AppointmentTimeModels = _hospitalModel.AppointmentTimeModels;
-            DoctorModels = _hospitalModel.DoctorModels;
+        private void InitModels()
+        {
+            _hospitalModel = HospitalModel.Instance;
+            AppointmentTimeModels = new ObservableCollection<AppointmentTimeModel>( _hospitalModel.AppointmentTimeModels);
+            DoctorModels = new ObservableCollection<DoctorModel>( _hospitalModel.DoctorModels);
+        }
 
-            CreateAppointmentCommand = ReactiveCommand.Create(CreateAppointment);
-
+        private void InitAndSubscribeUpdateCanCreate()
+        {
             var combinedPropertiesUpdateCanCreate = this.WhenAnyValue(
-                x => x._patientViewModel.PatientName,
-                x => x._patientViewModel.PatientSurname,
-                x => x._doctorViewModel.SelectedDoctor,
-                x => x._appointmentTimeViewModel.SelectedAppointmentTimeModel);
+               x => x._patientViewModel.PatientName,
+               x => x._patientViewModel.PatientSurname,
+               x => x._doctorViewModel.SelectedDoctor,
+               x => x._appointmentTimeViewModel.SelectedAppointmentTimeModel);
 
             combinedPropertiesUpdateCanCreate
                 .Subscribe(_ => UpdateCanCreateAppointment());
+        }
 
-            var combinedPropertiesUpdateAppTime = this.WhenAnyValue(
-            x => x._doctorViewModel.SelectedDoctor);
+        private void CallCreateAppointment()
+        {
+            if (PatientExist())
+            {
+                CreatePatient();
+                CreateAppointment();
+            }
+            else
+            {
 
+            }
+
+            ClearInputFieldsAndSelections();
+        }
+
+        private void CreateAppointment()
+        {
+            PatientModel patientModel = _hospitalModel.GetPatientModel(_patientViewModel.PatientName, _patientViewModel.PatientSurname);
+            DoctorModel doctorModel = _doctorViewModel.SelectedDoctor;
+            AppointmentTimeModel appointmentTimeModel = _appointmentTimeViewModel.SelectedAppointmentTimeModel;
+
+            _hospitalModel.CreateAppointment(patientModel, doctorModel, appointmentTimeModel);
         }
 
         private void CreatePatient()
@@ -80,17 +133,9 @@ namespace ViewModel
             _hospitalModel.CreatePatient(_patientViewModel.PatientName, _patientViewModel.PatientSurname);
         }
 
-        private void CreateAppointment()
+        private bool PatientExist()
         {
-            CreatePatient();
-
-            PatientModel patientModel = _hospitalModel.GetPatientModel(_patientViewModel.PatientName, _patientViewModel.PatientSurname);
-            DoctorModel doctorModel = _doctorViewModel.SelectedDoctor;
-            AppointmentTimeModel appointmentTimeModel = _appointmentTimeViewModel.SelectedAppointmentTimeModel;
-
-            _hospitalModel.CreateAppointment(patientModel, doctorModel, appointmentTimeModel);
-
-            ClearInputFieldsAndSelections();
+            return _hospitalModel.PatientExists(_patientViewModel.PatientName, _patientViewModel.PatientSurname);
         }
 
         private void UpdateCanCreateAppointment()

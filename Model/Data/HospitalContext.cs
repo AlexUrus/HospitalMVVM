@@ -21,6 +21,7 @@ namespace Model.Data
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=HospitalMVVM;Trusted_Connection=True;");
+                if (!optionsBuilder.IsConfigured) throw new Exception("Неудалось подключиться к базе данных");
             }
         }
 

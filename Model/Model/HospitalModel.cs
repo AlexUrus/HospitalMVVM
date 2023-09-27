@@ -33,11 +33,11 @@ namespace Model.Model
             InitAppointmentTimes();
         }
         private DataRepository _repository;
-        public ObservableCollection<DoctorModel> DoctorModels { get; private set; }
-        public ObservableCollection<PatientModel> PatientModels { get; private set; }
-        public ObservableCollection<AppointmentModel> AppointmentModels { get; private set; }
-        public ObservableCollection<AppointmentTimeModel> AppointmentTimeModels { get; private set; }
-        public ObservableCollection<TypeDoctorModel> TypeDoctorModels { get; private set; }
+        public ICollection<DoctorModel> DoctorModels { get; private set; }
+        public ICollection<PatientModel> PatientModels { get; private set; }
+        public ICollection<AppointmentModel> AppointmentModels { get; private set; }
+        public ICollection<AppointmentTimeModel> AppointmentTimeModels { get; private set; }
+        public ICollection<TypeDoctorModel> TypeDoctorModels { get; private set; }
         private void InitTypeDoctors()
         {
             TypeDoctorModels = _repository.GetTypeDoctorModels();
@@ -76,6 +76,11 @@ namespace Model.Model
             _repository.CreatePatient(name, surname);
         }
 
+        public bool PatientExists(string name, string surname)
+        {
+            return _repository.PatientExists(name, surname);
+        }
+
         public void CreateAppointment(PatientModel patientModel, DoctorModel doctorModel, AppointmentTimeModel appointmentTimeModel)
         { 
             _repository.CreateAppointment(patientModel, doctorModel, appointmentTimeModel);
@@ -85,16 +90,5 @@ namespace Model.Model
         {
             return _repository.GetPatientModel(name, surname);
         }
-
-        public DoctorModel GetDoctorModel(string name, string surname)
-        {
-            return _repository.GetDoctorModel(name, surname);
-        }
-
-        public AppointmentModel GetAppointmentModel(PatientModel patientModel, DoctorModel doctorModel, AppointmentTimeModel appointmentTimeModel)
-        {
-            return _repository.GetAppointmentModel(patientModel, doctorModel, appointmentTimeModel);
-        }
-
     }
 }

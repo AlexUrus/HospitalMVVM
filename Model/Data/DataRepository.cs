@@ -1,5 +1,7 @@
-﻿using Model.EFModel;
+﻿using Microsoft.Data.SqlClient;
+using Model.EFModel;
 using Model.Model;
+using System;
 using System.Collections.ObjectModel;
 
 namespace Model.Data
@@ -42,10 +44,9 @@ namespace Model.Data
                 _context.Appointments.Add(appointment);
                 _context.SaveChanges();
             }
-            catch (Exception)
+            catch (SqlException ex)
             {
-
-                throw;
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -61,9 +62,10 @@ namespace Model.Data
 
                 return new AppointmentModel(appointment.Id, doctorModel, patientModel, appointmentTimeModel);
             }
-            catch (Exception ex)
+            catch (SqlException ex)
             {
-                throw;
+                Console.WriteLine(ex.Message);
+                return null;
             }
         }
 
@@ -75,10 +77,9 @@ namespace Model.Data
                 _context.Patients.Add(patient);
                 _context.SaveChanges();
             }
-            catch (Exception)
+            catch (SqlException ex)
             {
-
-                throw;
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -89,10 +90,10 @@ namespace Model.Data
                 bool exists = _context.Patients.Any(p => p.Name == name && p.Surname == surname);
                 return exists;
             }
-            catch (Exception ex)
+            catch (SqlException ex)
             {
-                Console.WriteLine($"Error checking patient existence: {ex.Message}");
-                throw;
+                Console.WriteLine(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -103,17 +104,20 @@ namespace Model.Data
                 Patient patient = _context.Patients.FirstOrDefault(p => p.Name == name && p.Surname == surname);
                 return new PatientModel(patient.Id, patient.Name, patient.Surname);
             }
-            catch (Exception ex)
+            catch (SqlException ex)
             {
-                throw;
+                Console.WriteLine(ex.Message);
+                return null;
             }
         }
 
         public void CreateDoctors()
         {
-            List<TypeDoctor> typeDoctors = GetTypeDoctors();
-            List<Doctor> doctors = new List<Doctor>()
+            try
             {
+                ICollection<TypeDoctor> typeDoctors = GetTypeDoctors();
+                ICollection<Doctor> doctors = new List<Doctor>()
+                {
                     new Doctor()
                     {
                         Name = "Иван",
@@ -144,45 +148,22 @@ namespace Model.Data
                         Surname = "Александров",
                         Type = typeDoctors.FirstOrDefault(t => t.Type == "Гастроэнтеролог")
                     }
-            };
+                };
 
-            _context.Doctors.AddRange(doctors);
-            _context.SaveChanges();
-        }
-
-        public DoctorModel GetDoctorModel(string name, string surname)
-        {
-            try
-            {
-                Doctor doctor = _context.Doctors.FirstOrDefault(p => p.Name == name && p.Surname == surname);
-                return new DoctorModel(doctor.Id, doctor.Name, doctor.Surname, new TypeDoctorModel(doctor.Type.Id, doctor.Type.Type));
+                _context.Doctors.AddRange(doctors);
+                _context.SaveChanges();
             }
-            catch (Exception ex)
+            catch (SqlException ex)
             {
-                throw;
+                Console.WriteLine(ex.Message);
             }
         }
 
-        public bool IsFreeDoctorInTime(AppointmentTimeModel appointmentTimeModel, DoctorModel doctorModel)
+        public ICollection<AppointmentTimeModel> GetListFreeTimesDoctor(DoctorModel doctorModel)
         {
             try
             {
-                Appointment? appointment = _context.Appointments
-                    .FirstOrDefault(a => a.AppointmentTime == ConvertModelToEf(appointmentTimeModel) && a.Doctor == ConvertModelToEf(doctorModel));
-                return appointment == null;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        public ObservableCollection<AppointmentTimeModel> GetListFreeTimesDoctor(DoctorModel doctorModel)
-        {
-            try
-            {
-                ObservableCollection<AppointmentTimeModel> allAppointmentTimes = GetAppointmentTimes();
+                ICollection<AppointmentTimeModel> allAppointmentTimes = GetAppointmentTimes();
 
                 var busyTimes = _context.Appointments
                     .Where(a => a.Doctor == ConvertModelToEf(doctorModel))
@@ -193,22 +174,22 @@ namespace Model.Data
                     .Where(time => !busyTimes.Contains(time.Id))
                     .ToList();
 
-                return new ObservableCollection<AppointmentTimeModel>(freeTimes);
+                return freeTimes;
             }
-            catch (Exception ex)
+            catch (SqlException ex)
             {
-                Console.WriteLine($"Error checking doctor existence: {ex.Message}");
-                throw;
+                Console.WriteLine(ex.Message);
+                return null;
             }
         }
 
-        public ObservableCollection<DoctorModel> GetDoctorModels()
+        public ICollection<DoctorModel> GetDoctorModels()
         {
-            ObservableCollection<DoctorModel> doctorModels;
+            ICollection<DoctorModel> doctorModels;
             try
             {
-                List<Doctor> listDoctor = _context.Doctors.ToList();
-                doctorModels = new ObservableCollection<DoctorModel>();
+                ICollection<Doctor> listDoctor = _context.Doctors.ToList();
+                doctorModels = new List<DoctorModel>();
 
                 foreach (Doctor doctor in listDoctor)
                 {
@@ -217,36 +198,38 @@ namespace Model.Data
 
                 return doctorModels;
             }
-            catch (Exception)
+            catch (SqlException ex)
             {
-
-                throw;
+                Console.WriteLine(ex.Message);
+                return null;
             }
         }
 
-        public ObservableCollection<AppointmentTimeModel> GetAppointmentTimes()
+        public ICollection<AppointmentTimeModel> GetAppointmentTimes()
         {
-            ObservableCollection<AppointmentTimeModel> appointmentTimeModels;
+            ICollection<AppointmentTimeModel> appointmentTimeModels;
             try
             {
-                List<AppointmentTime> listAppointmentTimes = _context.AppointmentTimes.ToList();
-                appointmentTimeModels = new ObservableCollection<AppointmentTimeModel>();
+                ICollection<AppointmentTime> listAppointmentTimes = _context.AppointmentTimes.ToList();
+                appointmentTimeModels = new List<AppointmentTimeModel>();
                 foreach (AppointmentTime appointmentTime in listAppointmentTimes)
                 {
                     appointmentTimeModels.Add(new AppointmentTimeModel(appointmentTime.Id, appointmentTime.StartTime, appointmentTime.EndTime));
                 }
                 return appointmentTimeModels;
             }
-            catch (Exception)
+            catch (SqlException ex)
             {
-
-                throw;
+                Console.WriteLine(ex.Message);
+                return null;
             }
         }
 
         public void CreateAppointmentTimes()
         {
-            List<AppointmentTime> appointmentTimes = new List<AppointmentTime>()
+            try
+            {
+                List<AppointmentTime> appointmentTimes = new List<AppointmentTime>()
             {
                 new AppointmentTime()
                 {
@@ -270,14 +253,21 @@ namespace Model.Data
                 },
             };
 
-            _context.AppointmentTimes.AddRange(appointmentTimes);
-            _context.SaveChanges();
+                _context.AppointmentTimes.AddRange(appointmentTimes);
+                _context.SaveChanges();
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public void CreateTypeDoctorModels()
         {
-            List<TypeDoctor> typeDoctors = new List<TypeDoctor>()
+            try
             {
+                List<TypeDoctor> typeDoctors = new List<TypeDoctor>()
+                {
                 new TypeDoctor()
                 {
                     Type = "Терапевт"
@@ -298,30 +288,35 @@ namespace Model.Data
                 {
                     Type = "Гастроэнтеролог"
                 },
-            };
+                };
 
-            _context.TypeDoctors.AddRange(typeDoctors);
-            _context.SaveChanges();
+                _context.TypeDoctors.AddRange(typeDoctors);
+                _context.SaveChanges();
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            } 
         }
-        private List<TypeDoctor> GetTypeDoctors()
+        private ICollection<TypeDoctor> GetTypeDoctors()
         {
             try
             { 
                 return _context.TypeDoctors.ToList();
             }
-            catch (Exception)
+            catch (SqlException ex)
             {
-
-                throw;
+                Console.WriteLine(ex.Message);
+                return null;
             }
         }
-        public ObservableCollection<TypeDoctorModel> GetTypeDoctorModels()
+        public ICollection<TypeDoctorModel> GetTypeDoctorModels()
         {
-            ObservableCollection<TypeDoctorModel> typeDoctorModels;
+            ICollection<TypeDoctorModel> typeDoctorModels;
             try
             {
-                List<TypeDoctor> listTypeDoctors = _context.TypeDoctors.ToList();
-                typeDoctorModels = new ObservableCollection<TypeDoctorModel>();
+                ICollection<TypeDoctor> listTypeDoctors = _context.TypeDoctors.ToList();
+                typeDoctorModels = new List<TypeDoctorModel>();
 
                 foreach (TypeDoctor typeDoctor in listTypeDoctors)
                 {
@@ -330,10 +325,10 @@ namespace Model.Data
 
                 return typeDoctorModels;
             }
-            catch (Exception)
+            catch (SqlException ex)
             {
-
-                throw;
+                Console.WriteLine(ex.Message);
+                return null;
             }
         }
 

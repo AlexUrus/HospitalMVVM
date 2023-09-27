@@ -6,9 +6,6 @@
         xmlns:vm="clr-namespace:ViewModel;assembly=ViewModel"
         mc:Ignorable="d"
         Title="Hospital"  Height="450" Width="400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
-    <Window.DataContext>
-        <vm:HospitalViewModel/>
-    </Window.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="40*"/>
@@ -31,7 +28,7 @@
             <Label Content="Выберите врача:" Height="27" FontSize="14"/>
             <ComboBox Height="27" FontSize="14" ItemsSource="{Binding DoctorModels}" SelectedItem="{Binding DoctorViewModel.SelectedDoctor}"/>
             <Label Content="Выберите время приема:" Height="27" FontSize="14"/>
-            <ComboBox Height="27" FontSize="14" ItemsSource="{Binding DoctorViewModel.ListTakenTimesDoctor}" SelectedItem="{Binding AppointmentTimeViewModel.SelectedAppointmentTimeModel}"/>
+            <ComboBox Height="27" FontSize="14" ItemsSource="{Binding DoctorViewModel.ListFreeTimesDoctor}" SelectedItem="{Binding AppointmentTimeViewModel.SelectedAppointmentTimeModel}"/>
 
         </StackPanel>
         <Button Height="27" FontSize="14" Content="Записаться на прием" Grid.Row="1" Grid.Column="2" VerticalAlignment="Bottom" Command="{Binding CreateAppointmentCommand}" IsEnabled="{Binding CanCreateAppointment}" />

@@ -16,9 +16,7 @@ namespace Model.Model
         public string Surname { get; private set; }
         public TypeDoctorModel Type { get; private set; }
 
-        private ObservableCollection<AppointmentTimeModel> _listTakenTimesDoctor;
-
-        public ObservableCollection<AppointmentTimeModel> ListFreeTimesDoctor {
+        public ICollection<AppointmentTimeModel> ListFreeTimesDoctor {
             get
             {
                 return DataRepository.Instance.GetListFreeTimesDoctor(this);
@@ -31,16 +29,6 @@ namespace Model.Model
             Name = name;
             Surname = surname;
             Type = type;
-        }
-
-        public bool IsFreeDoctorInTime(AppointmentTimeModel appointmentTimeModel)
-        {
-            return DataRepository.Instance.IsFreeDoctorInTime(appointmentTimeModel, this);
-        }
-
-        public ObservableCollection<AppointmentTimeModel> GetFreeTimeDoctor()
-        {
-            return DataRepository.Instance.GetListFreeTimesDoctor(this);
         }
 
         public override string ToString()

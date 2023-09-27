@@ -12,7 +12,7 @@ namespace ViewModel
     public class DoctorViewModel : ReactiveObject
     { 
         private DoctorModel? _selectedDoctor;
-        private ObservableCollection<AppointmentTimeModel> _listTakenTimesDoctor;
+        private ObservableCollection<AppointmentTimeModel> _listFreeTimesDoctor;
         public DoctorModel? SelectedDoctor
         {
             get => _selectedDoctor;
@@ -23,21 +23,28 @@ namespace ViewModel
             }
         }
 
-        public ObservableCollection<AppointmentTimeModel> ListTakenTimesDoctor
+        public ObservableCollection<AppointmentTimeModel> ListFreeTimesDoctor
         {
             get
             {
-                return _listTakenTimesDoctor;
+                return _listFreeTimesDoctor;
             }
             private set
             {
-                this.RaiseAndSetIfChanged(ref _listTakenTimesDoctor, value);
+                this.RaiseAndSetIfChanged(ref _listFreeTimesDoctor, value);
             }
         }
 
         private void UpdateListTakenTimesDoctor()
         {
-            ListTakenTimesDoctor = SelectedDoctor?.ListFreeTimesDoctor;
+            if(SelectedDoctor != null)
+            {
+                ListFreeTimesDoctor = new ObservableCollection<AppointmentTimeModel>(SelectedDoctor.ListFreeTimesDoctor);
+            }
+            else
+            {
+                ListFreeTimesDoctor = new ObservableCollection<AppointmentTimeModel>();
+            }
         }
     }
 }

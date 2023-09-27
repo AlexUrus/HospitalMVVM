@@ -16,8 +16,6 @@ namespace Model.Model
         public PatientModel PatientModel { get; private set; }
         public AppointmentTimeModel AppointmentTimeModel { get; set; }
 
-        private DataRepository _dataRepository = DataRepository.Instance;
-
         public AppointmentModel(int id, DoctorModel doctorModel, PatientModel patientModel, AppointmentTimeModel appointmentTimeModel)
         {
             Id = id;
