@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace View
 {
     /// <summary>
-    /// Логика взаимодействия для MessageWindow.xaml
+    /// Логика взаимодействия для MessageView.xaml
     /// </summary>
-    public partial class MessageWindow : Window
+    public partial class MessageView : UserControl
     {
-        public MessageWindow()
+        public MessageView()
         {
             InitializeComponent();
         }
