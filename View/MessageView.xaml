@@ -7,10 +7,18 @@
              xmlns:local="clr-namespace:View"
              mc:Ignorable="d">
     <UserControl.DataContext>
-        <vm:MessageViewModel/>
+        <Binding Source="{x:Static vm:MessageViewModel.Instance}"/>
     </UserControl.DataContext>
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Background="AliceBlue">
-        <Label Content="{Binding TypeMessage}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <Label Content="{Binding Message}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
+        <Label Content="{Binding TypeMessage}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="27" FontSize="14" />
+        <Separator/>
+        <Label HorizontalAlignment="Center" VerticalAlignment="Center" Height="Auto" FontSize="14">
+            <Label.Content>
+                <TextBlock Width="Auto" Text="{Binding Message}" TextWrapping="Wrap" TextAlignment="Center"/>
+            </Label.Content>
+        </Label>
+        <Separator Height="11" Opacity="0"/>
+        <Button x:Name="OkButton" Content="OK" Command="{Binding ChangeVisibilityViewCommand}" Height="27" FontSize="14" Width="30"/>
+        <Separator Height="11" Opacity="0"/>
     </StackPanel>
 </UserControl>

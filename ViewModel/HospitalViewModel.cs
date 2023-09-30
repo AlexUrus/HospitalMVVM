@@ -40,7 +40,7 @@ namespace ViewModel
             private set => this.RaiseAndSetIfChanged(ref _appointmentTimeViewModel, value);
         }
 
-        public MessageViewModel MessgeViewModel
+        public MessageViewModel MessageViewModel
         {
             get => _messageViewModel;
             private set => this.RaiseAndSetIfChanged(ref _messageViewModel, value);
@@ -54,18 +54,6 @@ namespace ViewModel
         #endregion
 
         #region Commands
-        private ICommand _openMessageWindow;
-        public ICommand OpenMessageWindow
-        {
-            get
-            {
-                if (_openMessageWindow == null)
-                {
-                    //_openMessageWindow = new OpenMessageWindowCommand(this);
-                }
-                return _openMessageWindow;
-            }
-        }
         public ReactiveCommand<Unit, Unit> CreateAppointmentCommand { get; }
         #endregion
         public HospitalViewModel()
@@ -79,10 +67,10 @@ namespace ViewModel
 
         private void InitViewModels()
         {
+            _messageViewModel = MessageViewModel.Instance;
             _patientViewModel = new PatientViewModel();
             _doctorViewModel = new DoctorViewModel();
             _appointmentTimeViewModel = new AppointmentTimeViewModel();
-            _messageViewModel = new MessageViewModel();
         }
 
         private void InitModels()
@@ -113,7 +101,7 @@ namespace ViewModel
             }
             else
             {
-                // вывод сообщения Пациент существует
+                ShowMessageView("Пациент с таким именем и фамилией уже существует", "Ошибка");
             }
 
             ClearInputFieldsAndSelections();
@@ -152,6 +140,13 @@ namespace ViewModel
             _patientViewModel.PatientSurname = "";
             _doctorViewModel.SelectedDoctor = null;
             _appointmentTimeViewModel.SelectedAppointmentTimeModel = null;
+        }
+
+        private void ShowMessageView(string message, string type)
+        {
+            MessageViewModel.Message = message;
+            MessageViewModel.TypeMessage = type;
+            MessageViewModel.IsVisible = true;
         }
     }
 }

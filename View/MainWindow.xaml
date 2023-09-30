@@ -4,12 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:ViewModel;assembly=ViewModel"
-        xmlns:userControls="clr-namespace:View"
+        xmlns:UserControls="clr-namespace:View"
         mc:Ignorable="d"
-        Title="Hospital"  Height="450" Width="400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="Hospital"  Height="650" Width="400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <vm:HospitalViewModel/>
     </Window.DataContext>
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibility"/>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="40*"/>
@@ -36,7 +39,8 @@
 
         </StackPanel>
         <StackPanel Grid.Row="1" Grid.Column="2" VerticalAlignment="Bottom">
-            <userControls:MessageView Grid.Column="2" Grid.Row="1" VerticalAlignment="Bottom" />
+            <UserControls:MessageView Grid.Column="2" Grid.Row="1" VerticalAlignment="Bottom" BorderBrush="Gray" BorderThickness="1" Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibility}}"/>
+            <Separator Height="27" Opacity="0"/>
             <Button Height="27" FontSize="14" Content="Записаться на прием" Command="{Binding CreateAppointmentCommand}" IsEnabled="{Binding CanCreateAppointment}" />
         </StackPanel>
     </Grid>
