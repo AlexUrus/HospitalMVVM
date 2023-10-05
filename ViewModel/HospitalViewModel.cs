@@ -61,6 +61,7 @@ namespace ViewModel
             InitViewModels();
             InitModels();
             InitAndSubscribeUpdateCanCreate();
+            InitAndSubscribeUpdateListTakenTimesDoctor();
 
             CreateAppointmentCommand = ReactiveCommand.Create(CallCreateAppointment);
         }
@@ -92,12 +93,25 @@ namespace ViewModel
                 .Subscribe(_ => UpdateCanCreateAppointment());
         }
 
+        private void InitAndSubscribeUpdateListTakenTimesDoctor()
+        {
+            var combinedPropertiesUpdateCanCreate = this.WhenAnyValue(
+               x => x._doctorViewModel.SelectedDoctor);
+
+            combinedPropertiesUpdateCanCreate
+                .Subscribe(_ => UpdateListTakenTimesDoctor());
+        }
+
         private void CallCreateAppointment()
         {
-            if (PatientExist())
+            if (!PatientExist())
             {
                 CreatePatient();
                 CreateAppointment();
+
+                ShowMessageView($"Вы записаны к {DoctorViewModel.SelectedDoctor}\n" +
+                    $"на время\n" +
+                    $"{AppointmentTimeViewModel.SelectedAppointmentTimeModel}", "Успешно");
             }
             else
             {
@@ -124,6 +138,18 @@ namespace ViewModel
         private bool PatientExist()
         {
             return _hospitalModel.PatientExists(_patientViewModel.PatientName, _patientViewModel.PatientSurname);
+        }
+
+        private void UpdateListTakenTimesDoctor()
+        {
+            if (DoctorViewModel.SelectedDoctor != null)
+            {
+                DoctorViewModel.ListFreeTimesDoctor = new ObservableCollection<AppointmentTimeModel>(DoctorViewModel.SelectedDoctor.ListFreeTimesDoctor);
+            }
+            else
+            {
+                DoctorViewModel.ListFreeTimesDoctor = new ObservableCollection<AppointmentTimeModel>();
+            }
         }
 
         private void UpdateCanCreateAppointment()

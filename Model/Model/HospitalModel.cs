@@ -5,33 +5,15 @@ namespace Model.Model
 {
     public class HospitalModel
     {
-        private static HospitalModel _instance;
-        public static HospitalModel Instance
+        public HospitalModel()
         {
-            get
-            {
-                if (_instance == null)
-                {
-                    lock (typeof(HospitalModel))
-                    {
-                        if (_instance == null)
-                        {
-                            _instance = new HospitalModel();
-                        }
-                    }
-                }
-                return _instance;
-            }
-        }
-
-        private HospitalModel()
-        {
-            _repository = DataRepository.Instance;
+            _repository = new DataRepository();
 
             InitTypeDoctors();
             InitDoctors();
             InitAppointmentTimes();
         }
+
         private DataRepository _repository;
         public ICollection<DoctorModel> DoctorModels { get; private set; }
         public ICollection<PatientModel> PatientModels { get; private set; }
@@ -89,6 +71,11 @@ namespace Model.Model
         public PatientModel GetPatientModel(string name, string surname)
         {
             return _repository.GetPatientModel(name, surname);
+        }
+
+        public ICollection<AppointmentTimeModel> GetListFreeTimesDoctor(DoctorModel doctorModel)
+        {
+            return _repository.GetListFreeTimesDoctor(doctorModel);
         }
     }
 }

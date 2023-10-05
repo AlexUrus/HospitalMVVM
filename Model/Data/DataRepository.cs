@@ -29,7 +29,7 @@ namespace Model.Data
 
         }
 
-        private DataRepository()
+        public DataRepository()
         {
             _context = new HospitalContext();
         }

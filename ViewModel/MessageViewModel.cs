@@ -11,25 +11,8 @@ namespace ViewModel
 {
     public class MessageViewModel : ReactiveObject
     {
-		private string _message;
-        private static MessageViewModel _instance;
-        public static MessageViewModel Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    lock (typeof(MessageViewModel))
-                    {
-                        if (_instance == null)
-                        {
-                            _instance = new MessageViewModel();
-                        }
-                    }
-                }
-                return _instance;
-            }
-        }
+        private string _message;
+        
         public string Message
 		{
 			get { return _message; }
@@ -54,7 +37,7 @@ namespace ViewModel
 
         public ReactiveCommand<Unit, Unit> ChangeVisibilityViewCommand { get; }
 
-        private MessageViewModel()
+        public MessageViewModel()
         {
             IsVisible = false;
             ChangeVisibilityViewCommand = ReactiveCommand.Create(ChangeVisibilityView);
@@ -66,6 +49,13 @@ namespace ViewModel
                 IsVisible = false;
             else
                 IsVisible = true;
+        }
+
+        public void ShowMessage(string message, string type)
+        {
+            Message = message;
+            TypeMessage = type;
+            IsVisible = true;
         }
     }
 }

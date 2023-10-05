@@ -16,13 +16,6 @@ namespace Model.Model
         public string Surname { get; private set; }
         public TypeDoctorModel Type { get; private set; }
 
-        public ICollection<AppointmentTimeModel> ListFreeTimesDoctor {
-            get
-            {
-                return DataRepository.Instance.GetListFreeTimesDoctor(this);
-            }
-        }
-
         public DoctorModel(int id, string name, string surname, TypeDoctorModel type) 
         {
             Id = id;

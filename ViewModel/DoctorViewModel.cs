@@ -19,7 +19,6 @@ namespace ViewModel
             set 
             {
                 this.RaiseAndSetIfChanged(ref _selectedDoctor, value);
-                UpdateListTakenTimesDoctor();
             }
         }
 
@@ -29,12 +28,12 @@ namespace ViewModel
             {
                 return _listFreeTimesDoctor;
             }
-            private set
+            set
             {
                 this.RaiseAndSetIfChanged(ref _listFreeTimesDoctor, value);
             }
         }
-
+        /*
         private void UpdateListTakenTimesDoctor()
         {
             if(SelectedDoctor != null)
@@ -45,6 +44,6 @@ namespace ViewModel
             {
                 ListFreeTimesDoctor = new ObservableCollection<AppointmentTimeModel>();
             }
-        }
+        }*/
     }
 }
