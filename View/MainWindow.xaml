@@ -39,7 +39,7 @@
 
         </StackPanel>
         <StackPanel Grid.Row="1" Grid.Column="2" VerticalAlignment="Bottom">
-            <UserControls:MessageView Grid.Column="2" Grid.Row="1" VerticalAlignment="Bottom" BorderBrush="Gray" BorderThickness="1" Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibility}}"/>
+            <UserControls:MessageView Grid.Column="2" Grid.Row="1" VerticalAlignment="Bottom" BorderBrush="Gray" BorderThickness="1" Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibility}}" DataContext="{Binding MessageViewModel}"/>
             <Separator Height="27" Opacity="0"/>
             <Button Height="27" FontSize="14" Content="Записаться на прием" Command="{Binding CreateAppointmentCommand}" IsEnabled="{Binding CanCreateAppointment}" />
         </StackPanel>

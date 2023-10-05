@@ -16,8 +16,6 @@ namespace Model.Model
 
         private DataRepository _repository;
         public ICollection<DoctorModel> DoctorModels { get; private set; }
-        public ICollection<PatientModel> PatientModels { get; private set; }
-        public ICollection<AppointmentModel> AppointmentModels { get; private set; }
         public ICollection<AppointmentTimeModel> AppointmentTimeModels { get; private set; }
         public ICollection<TypeDoctorModel> TypeDoctorModels { get; private set; }
         private void InitTypeDoctors()

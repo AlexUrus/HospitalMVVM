@@ -11,23 +11,21 @@ namespace ViewModel
 {
     public class MessageViewModel : ReactiveObject
     {
-        private string _message;
-        
+        private string _message; 
+        private string _typeMessage;
+        private bool isVisible;
+
         public string Message
 		{
 			get { return _message; }
 			set { this.RaiseAndSetIfChanged(ref _message, value); }
 		}
 
-        private string _typeMessage;
-
         public string TypeMessage
         {
             get { return _typeMessage; }
             set { this.RaiseAndSetIfChanged(ref _typeMessage, value); }
         }
-
-        private bool isVisible;
 
         public bool IsVisible
         {

@@ -33,17 +33,16 @@ namespace ViewModel
                 this.RaiseAndSetIfChanged(ref _listFreeTimesDoctor, value);
             }
         }
-        /*
-        private void UpdateListTakenTimesDoctor()
+
+        public void ClearFields()
         {
-            if(SelectedDoctor != null)
-            {
-                ListFreeTimesDoctor = new ObservableCollection<AppointmentTimeModel>(SelectedDoctor.ListFreeTimesDoctor);
-            }
-            else
-            {
-                ListFreeTimesDoctor = new ObservableCollection<AppointmentTimeModel>();
-            }
-        }*/
+            SelectedDoctor = null;
+            ListFreeTimesDoctor.Clear();
+        }
+
+        public bool IsCanCreateAppointment()
+        {
+            return SelectedDoctor != null;
+        }
     }
 }

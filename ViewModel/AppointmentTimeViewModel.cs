@@ -13,5 +13,14 @@ namespace ViewModel
             get => _selectedAppointmentTimeModel;
             set => this.RaiseAndSetIfChanged(ref _selectedAppointmentTimeModel, value);
         } 
+
+        public void ClearFields()
+        {
+            SelectedAppointmentTimeModel = null;
+        }
+        public bool IsCanCreateAppointment()
+        {
+            return SelectedAppointmentTimeModel != null;
+        }
     }
 }

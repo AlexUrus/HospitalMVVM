@@ -6,9 +6,7 @@
              xmlns:vm="clr-namespace:ViewModel;assembly=ViewModel"
              xmlns:local="clr-namespace:View"
              mc:Ignorable="d">
-    <UserControl.DataContext>
-        <Binding Source="{x:Static vm:MessageViewModel.Instance}"/>
-    </UserControl.DataContext>
+
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
         <Label Content="{Binding TypeMessage}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="27" FontSize="14" />
         <Separator/>

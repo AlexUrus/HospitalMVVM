@@ -3,7 +3,6 @@ using ReactiveUI;
 using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Windows.Input;
 
 
 namespace ViewModel
@@ -11,11 +10,11 @@ namespace ViewModel
     public class HospitalViewModel : ReactiveObject
     {
         #region Fields
-        private HospitalModel _hospitalModel { get; set; }
-
+        private HospitalModel _hospitalModel;
         private PatientViewModel _patientViewModel;
         private DoctorViewModel _doctorViewModel;
         private AppointmentTimeViewModel _appointmentTimeViewModel;
+
         private MessageViewModel _messageViewModel;
 
         private bool _canCreateAppointment;
@@ -56,6 +55,8 @@ namespace ViewModel
         #region Commands
         public ReactiveCommand<Unit, Unit> CreateAppointmentCommand { get; }
         #endregion
+
+        #region Constructors
         public HospitalViewModel()
         {  
             InitViewModels();
@@ -65,7 +66,9 @@ namespace ViewModel
 
             CreateAppointmentCommand = ReactiveCommand.Create(CallCreateAppointment);
         }
+        #endregion
 
+        #region Init Methods
         private void InitViewModels()
         {
             _messageViewModel = new MessageViewModel();
@@ -99,8 +102,9 @@ namespace ViewModel
                x => x._doctorViewModel.SelectedDoctor);
 
             combinedPropertiesUpdateCanCreate
-                .Subscribe(_ => UpdateListTakenTimesDoctor());
+                .Subscribe(_ => UpdateListFreeTimesDoctor());
         }
+        #endregion
 
         private void CallCreateAppointment()
         {
@@ -140,38 +144,36 @@ namespace ViewModel
             return _hospitalModel.PatientExists(_patientViewModel.PatientName, _patientViewModel.PatientSurname);
         }
 
-        private void UpdateListTakenTimesDoctor()
+        private void UpdateListFreeTimesDoctor()
         {
-            if (DoctorViewModel.SelectedDoctor != null)
+            if (_doctorViewModel.SelectedDoctor != null)
             {
-                DoctorViewModel.ListFreeTimesDoctor = new ObservableCollection<AppointmentTimeModel>
-                    (_hospitalModel.GetListFreeTimesDoctor(DoctorViewModel.SelectedDoctor));
+                _doctorViewModel.ListFreeTimesDoctor = new ObservableCollection<AppointmentTimeModel>
+                    (_hospitalModel.GetListFreeTimesDoctor(_doctorViewModel.SelectedDoctor));
             }
             else
             {
-                DoctorViewModel.ListFreeTimesDoctor = new ObservableCollection<AppointmentTimeModel>();
+                _doctorViewModel.ListFreeTimesDoctor = new ObservableCollection<AppointmentTimeModel>();
             }
         }
 
         private void UpdateCanCreateAppointment()
         {
-            CanCreateAppointment = _appointmentTimeViewModel.SelectedAppointmentTimeModel is not null
-                && _doctorViewModel.SelectedDoctor is not null
-                && !string.IsNullOrWhiteSpace(_patientViewModel.PatientName)
-                && !string.IsNullOrWhiteSpace(_patientViewModel.PatientSurname);
+            CanCreateAppointment = _appointmentTimeViewModel.IsCanCreateAppointment()
+                && _doctorViewModel.IsCanCreateAppointment()
+                && _patientViewModel.IsCanCreateAppointment();
         }
 
         private void ClearInputFieldsAndSelections()
         {
-            _patientViewModel.PatientName = "";
-            _patientViewModel.PatientSurname = "";
-            _doctorViewModel.SelectedDoctor = null;
-            _appointmentTimeViewModel.SelectedAppointmentTimeModel = null;
+            _patientViewModel.ClearFields();
+            _doctorViewModel.ClearFields();
+            _appointmentTimeViewModel.ClearFields();
         }
 
         private void ShowMessageView(string message, string type)
         {
-            MessageViewModel.ShowMessage(message, type);
+            _messageViewModel.ShowMessage(message, type);
         }
     }
 }

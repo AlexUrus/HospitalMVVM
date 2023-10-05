@@ -5,7 +5,6 @@ namespace ViewModel
 {
     public class PatientViewModel : ReactiveObject
     {
-        //private PatientModel? _patientModel { get; set; }
         private string? _patientName;
         private string? _patientSurname;
         public string? PatientName
@@ -18,6 +17,17 @@ namespace ViewModel
         {
             get => _patientSurname;
             set => this.RaiseAndSetIfChanged(ref _patientSurname, value);
+        }
+
+        public void ClearFields()
+        {
+            PatientName = null;
+            PatientSurname = null;
+        }
+
+        public bool IsCanCreateAppointment()
+        {
+            return !string.IsNullOrWhiteSpace(PatientName) && !string.IsNullOrWhiteSpace(PatientSurname);
         }
 
     }
