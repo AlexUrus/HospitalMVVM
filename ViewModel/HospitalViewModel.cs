@@ -68,7 +68,7 @@ namespace ViewModel
 
         private void InitViewModels()
         {
-            _messageViewModel = MessageViewModel.Instance;
+            _messageViewModel = new MessageViewModel();
             _patientViewModel = new PatientViewModel();
             _doctorViewModel = new DoctorViewModel();
             _appointmentTimeViewModel = new AppointmentTimeViewModel();
@@ -76,7 +76,7 @@ namespace ViewModel
 
         private void InitModels()
         {
-            _hospitalModel = HospitalModel.Instance;
+            _hospitalModel = new HospitalModel();
             AppointmentTimeModels = new ObservableCollection<AppointmentTimeModel>( _hospitalModel.AppointmentTimeModels);
             DoctorModels = new ObservableCollection<DoctorModel>( _hospitalModel.DoctorModels);
         }
@@ -144,7 +144,8 @@ namespace ViewModel
         {
             if (DoctorViewModel.SelectedDoctor != null)
             {
-                DoctorViewModel.ListFreeTimesDoctor = new ObservableCollection<AppointmentTimeModel>(DoctorViewModel.SelectedDoctor.ListFreeTimesDoctor);
+                DoctorViewModel.ListFreeTimesDoctor = new ObservableCollection<AppointmentTimeModel>
+                    (_hospitalModel.GetListFreeTimesDoctor(DoctorViewModel.SelectedDoctor));
             }
             else
             {
@@ -170,9 +171,7 @@ namespace ViewModel
 
         private void ShowMessageView(string message, string type)
         {
-            MessageViewModel.Message = message;
-            MessageViewModel.TypeMessage = type;
-            MessageViewModel.IsVisible = true;
+            MessageViewModel.ShowMessage(message, type);
         }
     }
 }

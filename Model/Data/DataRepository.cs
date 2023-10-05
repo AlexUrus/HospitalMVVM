@@ -9,25 +9,6 @@ namespace Model.Data
     public class DataRepository
     {
         private HospitalContext _context;
-        private static DataRepository? _instance;
-
-        public static DataRepository Instance
-        {
-            get
-            {
-                if (_instance != null)
-                {
-                    return _instance;
-                }
-                else
-                {
-                    _instance = new DataRepository();
-                    return _instance;
-                }
-
-            }
-
-        }
 
         public DataRepository()
         {
