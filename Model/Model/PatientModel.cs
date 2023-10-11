@@ -1,7 +1,7 @@
 ﻿
 namespace Model.Model
 {
-    public class PatientModel
+    public class PatientModel : AbstractModel
     {
         public int Id { get; init; }
         public string? Name { get; init; }

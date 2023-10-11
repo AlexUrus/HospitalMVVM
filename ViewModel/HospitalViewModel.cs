@@ -21,8 +21,8 @@ namespace ViewModel
         #endregion
 
         #region Properties
-        public ObservableCollection<DoctorModel> DoctorModels { get; set; }
-        public ObservableCollection<AppointmentTimeModel> AppointmentTimeModels { get; set; }
+        public ObservableCollection<string> DoctorModels { get; set; }
+        public ObservableCollection<string> AppointmentTimeModels { get; set; }
         public PatientViewModel PatientViewModel
         {
             get => _patientViewModel;
@@ -80,8 +80,8 @@ namespace ViewModel
         private void InitModels()
         {
             _hospitalModel = new HospitalModel();
-            AppointmentTimeModels = new ObservableCollection<AppointmentTimeModel>( _hospitalModel.AppointmentTimeModels);
-            DoctorModels = new ObservableCollection<DoctorModel>( _hospitalModel.DoctorModels);
+            AppointmentTimeModels = new ObservableCollection<string>(ConvertModelListToString(_hospitalModel.AppointmentTimeModels));
+            DoctorModels = new ObservableCollection<string>(ConvertModelListToString(_hospitalModel.DoctorModels));
         }
 
         private void InitAndSubscribeUpdateCanCreate()
@@ -89,7 +89,7 @@ namespace ViewModel
             var combinedPropertiesUpdateCanCreate = this.WhenAnyValue(
                x => x._patientViewModel.PatientName,
                x => x._patientViewModel.PatientSurname,
-               x => x._doctorViewModel.SelectedDoctor,
+               x => x._doctorViewModel.Doctor,
                x => x._appointmentTimeViewModel.SelectedAppointmentTimeModel);
 
             combinedPropertiesUpdateCanCreate
@@ -99,7 +99,7 @@ namespace ViewModel
         private void InitAndSubscribeUpdateListTakenTimesDoctor()
         {
             var combinedPropertiesUpdateCanCreate = this.WhenAnyValue(
-               x => x._doctorViewModel.SelectedDoctor);
+               x => x._doctorViewModel.Doctor);
 
             combinedPropertiesUpdateCanCreate
                 .Subscribe(_ => UpdateListFreeTimesDoctor());
@@ -108,12 +108,15 @@ namespace ViewModel
 
         private void CallCreateAppointment()
         {
-            if (!PatientExist())
-            {
-                CreatePatient();
-                CreateAppointment();
+            DoctorModel doctorModel = _doctorViewModel.Doctor;
+            AppointmentTimeModel appointmentTimeModel = _appointmentTimeViewModel.SelectedAppointmentTimeModel;
+            PatientModel? patientModel = _hospitalModel.CreatePatient(_patientViewModel.PatientName,_patientViewModel.PatientSurname);
+            
+            string result = _hospitalModel.CallCreateAppointment(patientModel, doctorModel, appointmentTimeModel);
 
-                ShowMessageView($"Вы записаны к {DoctorViewModel.SelectedDoctor}\n" +
+            if (result == "Ok")
+            { 
+                ShowMessageView($"Вы записаны к {DoctorViewModel.Doctor}\n" +
                     $"на время\n" +
                     $"{AppointmentTimeViewModel.SelectedAppointmentTimeModel}", "Успешно");
             }
@@ -121,35 +124,15 @@ namespace ViewModel
             {
                 ShowMessageView("Пациент с таким именем и фамилией уже существует", "Ошибка");
             }
-
             ClearInputFieldsAndSelections();
-        }
-
-        private void CreateAppointment()
-        {
-            PatientModel patientModel = _hospitalModel.GetPatientModel(_patientViewModel.PatientName, _patientViewModel.PatientSurname);
-            DoctorModel doctorModel = _doctorViewModel.SelectedDoctor;
-            AppointmentTimeModel appointmentTimeModel = _appointmentTimeViewModel.SelectedAppointmentTimeModel;
-
-            _hospitalModel.CreateAppointment(patientModel, doctorModel, appointmentTimeModel);
-        }
-
-        private void CreatePatient()
-        {
-            _hospitalModel.CreatePatient(_patientViewModel.PatientName, _patientViewModel.PatientSurname);
-        }
-
-        private bool PatientExist()
-        {
-            return _hospitalModel.PatientExists(_patientViewModel.PatientName, _patientViewModel.PatientSurname);
         }
 
         private void UpdateListFreeTimesDoctor()
         {
-            if (_doctorViewModel.SelectedDoctor != null)
+            if (_doctorViewModel.Doctor != null)
             {
                 _doctorViewModel.ListFreeTimesDoctor = new ObservableCollection<AppointmentTimeModel>
-                    (_hospitalModel.GetListFreeTimesDoctor(_doctorViewModel.SelectedDoctor));
+                    (_hospitalModel.GetListFreeTimesDoctor(_doctorViewModel.Doctor));
             }
             else
             {
@@ -174,6 +157,31 @@ namespace ViewModel
         private void ShowMessageView(string message, string type)
         {
             _messageViewModel.ShowMessage(message, type);
+        }
+
+        private ICollection<string> ConvertModelListToString<T>(ICollection<T> models) where T : AbstractModel
+        {
+            List<string> listDoctorModelStrings = new List<string>();
+
+            foreach (var model in models)
+            {
+                listDoctorModelStrings.Add(ModelToString(model));
+            }
+
+            return listDoctorModelStrings;
+        }
+
+        private string ModelToString(AbstractModel model)
+        {
+            if (model is DoctorModel doctor)
+            {
+                return $"{doctor.Name} {doctor.Surname} {doctor.Type}";
+            }
+            if(model is AppointmentTimeModel appointmentTime)
+            {
+                return $"с {appointmentTime.StartTime:hh\\:mm} по {appointmentTime.EndTime:hh\\:mm}";
+            }
+            return "Unknown";
         }
     }
 }

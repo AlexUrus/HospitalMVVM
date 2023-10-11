@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Model.Model
 {
-    public class DoctorModel 
+    public class DoctorModel : AbstractModel
     {
         public int Id { get; private set; }
         public string Name { get; private set; }
@@ -24,9 +24,5 @@ namespace Model.Model
             Type = type;
         }
 
-        public override string ToString()
-        {
-            return $"{Name} {Surname} {Type}";
-        }
     }
 }

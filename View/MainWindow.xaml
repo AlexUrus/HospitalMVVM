@@ -7,9 +7,6 @@
         xmlns:UserControls="clr-namespace:View"
         mc:Ignorable="d"
         Title="Hospital"  Height="650" Width="400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
-    <Window.DataContext>
-        <vm:HospitalViewModel/>
-    </Window.DataContext>
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibility"/>
     </Window.Resources>

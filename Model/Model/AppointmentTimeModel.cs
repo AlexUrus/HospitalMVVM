@@ -1,7 +1,7 @@
 ﻿
 namespace Model.Model
 {
-    public class AppointmentTimeModel 
+    public class AppointmentTimeModel : AbstractModel
     {
         public int Id { get; private set; }
         public TimeSpan StartTime { get; private set; }
@@ -14,9 +14,5 @@ namespace Model.Model
             EndTime = endTime;
         }
 
-        public override string ToString()
-        {
-            return $"с {StartTime.ToString(@"hh\:mm")} по {EndTime.ToString(@"hh\:mm")}";
-        }
     }
 }

@@ -14,6 +14,11 @@ namespace View
     /// </summary>
     public partial class App : Application
     {
-
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            var w = new MainWindow();
+            w.DataContext = new HospitalViewModel();
+            w.Show();
+        }
     }
 }

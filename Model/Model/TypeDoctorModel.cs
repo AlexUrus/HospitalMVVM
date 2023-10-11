@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Model.Model
 {
-    public class TypeDoctorModel
+    public class TypeDoctorModel : AbstractModel
     {
         public int Id { get; init; }
         public string Type { get; init; }

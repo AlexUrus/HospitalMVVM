@@ -11,14 +11,15 @@ namespace ViewModel
 {
     public class DoctorViewModel : ReactiveObject
     { 
-        private DoctorModel? _selectedDoctor;
+        private DoctorModel? _doctor;
         private ObservableCollection<AppointmentTimeModel> _listFreeTimesDoctor;
-        public DoctorModel? SelectedDoctor
+        
+        public DoctorModel? Doctor
         {
-            get => _selectedDoctor;
+            get => _doctor;
             set 
             {
-                this.RaiseAndSetIfChanged(ref _selectedDoctor, value);
+                this.RaiseAndSetIfChanged(ref _doctor, value);
             }
         }
 
@@ -36,13 +37,13 @@ namespace ViewModel
 
         public void ClearFields()
         {
-            SelectedDoctor = null;
+            Doctor = null;
             ListFreeTimesDoctor.Clear();
         }
 
         public bool IsCanCreateAppointment()
         {
-            return SelectedDoctor != null;
+            return Doctor != null;
         }
     }
 }

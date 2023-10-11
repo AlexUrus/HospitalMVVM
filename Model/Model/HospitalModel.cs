@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 namespace Model.Model
 {
-    public class HospitalModel
+    public class HospitalModel : AbstractModel
     {
         public HospitalModel()
         {
@@ -51,29 +51,50 @@ namespace Model.Model
             }
         }
 
-        public void CreatePatient(string name, string surname)
+        public string CallCreateAppointment(PatientModel? patientModel, DoctorModel doctorModel, AppointmentTimeModel appointmentTimeModel)
         {
-            _repository.CreatePatient(name, surname);
+            if(patientModel != null)
+            {
+                CreateAppointment(patientModel, doctorModel, appointmentTimeModel);
+                return "OK";
+            }
+            else
+            {
+                return "Error";
+            }
         }
 
-        public bool PatientExists(string name, string surname)
+        public PatientModel? CreatePatient(string name, string surname)
         {
-            return _repository.PatientExists(name, surname);
-        }
-
-        public void CreateAppointment(PatientModel patientModel, DoctorModel doctorModel, AppointmentTimeModel appointmentTimeModel)
-        { 
-            _repository.CreateAppointment(patientModel, doctorModel, appointmentTimeModel);
-        }
-
-        public PatientModel GetPatientModel(string name, string surname)
-        {
-            return _repository.GetPatientModel(name, surname);
+            if (PatientExists(name, surname))
+            {
+                return null;
+            }
+            else
+            {
+                _repository.CreatePatient(name, surname);
+                return GetPatientModel(name, surname);
+            }
         }
 
         public ICollection<AppointmentTimeModel> GetListFreeTimesDoctor(DoctorModel doctorModel)
         {
             return _repository.GetListFreeTimesDoctor(doctorModel);
+        }
+
+        private bool PatientExists(string name, string surname)
+        {
+            return _repository.PatientExists(name, surname);
+        }
+
+        private void CreateAppointment(PatientModel patientModel, DoctorModel doctorModel, AppointmentTimeModel appointmentTimeModel)
+        { 
+            _repository.CreateAppointment(patientModel, doctorModel, appointmentTimeModel);
+        }
+
+        private PatientModel GetPatientModel(string name, string surname)
+        {
+            return _repository.GetPatientModel(name, surname);
         }
     }
 }
