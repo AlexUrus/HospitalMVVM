@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 
 namespace Model.Data
 {
-    public class DataRepository
+    public class DataRepository : IRepository
     {
         private HospitalContext _context;
 
@@ -92,7 +92,7 @@ namespace Model.Data
             }
         }
 
-        public void CreateDoctors()
+        public void InitDoctors()
         {
             try
             {
@@ -206,7 +206,7 @@ namespace Model.Data
             }
         }
 
-        public void CreateAppointmentTimes()
+        public void InitAppointmentTimes()
         {
             try
             {
@@ -243,7 +243,7 @@ namespace Model.Data
             }
         }
 
-        public void CreateTypeDoctorModels()
+        public void InitTypeDoctorModels()
         {
             try
             {

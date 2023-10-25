@@ -83,10 +83,10 @@ namespace ViewModel
         #endregion
 
         #region Constructors
-        public HospitalViewModel()
+        public HospitalViewModel(HospitalModel hospitalModel)
         {
             InitViewModels();
-            InitModels();
+            InitModels(hospitalModel);
             InitAndSubscribeUpdateCanCreate();
             InitAndSubscribeUpdateListTakenTimesDoctor();
 
@@ -103,9 +103,9 @@ namespace ViewModel
             _appointmentTimeViewModel = new AppointmentTimeViewModel();
         }
 
-        private void InitModels()
+        private void InitModels(HospitalModel hospitalModel)
         {
-            _hospitalModel = new HospitalModel();
+            _hospitalModel = hospitalModel;
             AppointmentTimeModels = new ObservableCollection<string>(ConvertModelListToString(_hospitalModel.AppointmentTimeModels));
             DoctorModels = new ObservableCollection<string>(ConvertModelListToString(_hospitalModel.DoctorModels));
         }

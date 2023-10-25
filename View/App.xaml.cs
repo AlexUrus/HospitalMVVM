@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Model.Data;
+using Model.Model;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -16,9 +18,11 @@ namespace View
     {
         protected override void OnStartup(StartupEventArgs e)
         {
+            IRepository repository = new DataRepository();
+            HospitalModel hospitalModel = new HospitalModel(repository);
             var w = new MainWindow
             {
-                DataContext = new HospitalViewModel()
+                DataContext = new HospitalViewModel(hospitalModel)
             };
 
             w.Show();

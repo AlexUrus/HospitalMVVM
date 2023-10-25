@@ -5,16 +5,16 @@ namespace Model.Model
 {
     public class HospitalModel : AbstractModel
     {
-        public HospitalModel()
+        public HospitalModel(IRepository repository)
         {
-            _repository = new DataRepository();
+            _repository = repository;
 
             InitTypeDoctors();
             InitDoctors();
             InitAppointmentTimes();
         }
 
-        private DataRepository _repository;
+        private IRepository _repository;
         public ICollection<DoctorModel> DoctorModels { get; private set; }
         public ICollection<AppointmentTimeModel> AppointmentTimeModels { get; private set; }
         public ICollection<TypeDoctorModel> TypeDoctorModels { get; private set; }
@@ -24,7 +24,7 @@ namespace Model.Model
 
             if (TypeDoctorModels.Count == 0)
             {
-                _repository.CreateTypeDoctorModels();
+                _repository.InitTypeDoctorModels();
                 TypeDoctorModels = _repository.GetTypeDoctorModels();
             }
         }
@@ -35,7 +35,7 @@ namespace Model.Model
 
             if (DoctorModels.Count == 0)
             {
-                _repository.CreateDoctors();
+                _repository.InitDoctors();
                 DoctorModels = _repository.GetDoctorModels();
             }
         }
@@ -46,7 +46,7 @@ namespace Model.Model
 
             if (AppointmentTimeModels.Count == 0)
             {
-                _repository.CreateAppointmentTimes();
+                _repository.InitAppointmentTimes();
                 AppointmentTimeModels = _repository.GetAppointmentTimes();
             }
         }
