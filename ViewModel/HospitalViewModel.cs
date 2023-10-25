@@ -7,7 +7,7 @@ using System.Reactive.Linq;
 
 namespace ViewModel
 {
-    public class HospitalViewModel : ReactiveObject
+    public class HospitalViewModel : BaseViewModel
     {
         #region Fields
         private HospitalModel _hospitalModel;
@@ -18,6 +18,10 @@ namespace ViewModel
         private MessageViewModel _messageViewModel;
 
         private bool _canCreateAppointment;
+
+        private string _selectedDoctor;
+        private string _selectedAppointmetTime;
+        
         #endregion
 
         #region Properties
@@ -50,6 +54,28 @@ namespace ViewModel
             get => _canCreateAppointment;
             private set => this.RaiseAndSetIfChanged(ref _canCreateAppointment, value);
         }
+
+        public string SelectedDoctor
+        {
+            get => _selectedDoctor;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _selectedDoctor, value);
+                if (value != null)
+                    _doctorViewModel.Doctor = (DoctorModel)GetModel(_selectedDoctor);
+            }
+        }
+
+        public string SelectedAppointmetTime
+        {
+            get => _selectedAppointmetTime;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _selectedAppointmetTime, value);
+                if(value != null)
+                    _appointmentTimeViewModel.AppointmentTimeModel = (AppointmentTimeModel) GetModel(_selectedAppointmetTime);
+            }
+        }
         #endregion
 
         #region Commands
@@ -58,7 +84,7 @@ namespace ViewModel
 
         #region Constructors
         public HospitalViewModel()
-        {  
+        {
             InitViewModels();
             InitModels();
             InitAndSubscribeUpdateCanCreate();
@@ -90,7 +116,7 @@ namespace ViewModel
                x => x._patientViewModel.PatientName,
                x => x._patientViewModel.PatientSurname,
                x => x._doctorViewModel.Doctor,
-               x => x._appointmentTimeViewModel.SelectedAppointmentTimeModel);
+               x => x._appointmentTimeViewModel.AppointmentTimeModel);
 
             combinedPropertiesUpdateCanCreate
                 .Subscribe(_ => UpdateCanCreateAppointment());
@@ -109,16 +135,16 @@ namespace ViewModel
         private void CallCreateAppointment()
         {
             DoctorModel doctorModel = _doctorViewModel.Doctor;
-            AppointmentTimeModel appointmentTimeModel = _appointmentTimeViewModel.SelectedAppointmentTimeModel;
-            PatientModel? patientModel = _hospitalModel.CreatePatient(_patientViewModel.PatientName,_patientViewModel.PatientSurname);
-            
+            AppointmentTimeModel appointmentTimeModel = _appointmentTimeViewModel.AppointmentTimeModel;
+            PatientModel? patientModel = _hospitalModel.CreatePatient(_patientViewModel.PatientName, _patientViewModel.PatientSurname);
+
             string result = _hospitalModel.CallCreateAppointment(patientModel, doctorModel, appointmentTimeModel);
 
-            if (result == "Ok")
-            { 
-                ShowMessageView($"Вы записаны к {DoctorViewModel.Doctor}\n" +
+            if (result == "OK")
+            {
+                ShowMessageView($"Вы записаны к {SelectedDoctor}\n" +
                     $"на время\n" +
-                    $"{AppointmentTimeViewModel.SelectedAppointmentTimeModel}", "Успешно");
+                    $"{SelectedAppointmetTime}", "Успешно");
             }
             else
             {
@@ -173,15 +199,25 @@ namespace ViewModel
 
         private string ModelToString(AbstractModel model)
         {
+            string str;
             if (model is DoctorModel doctor)
             {
-                return $"{doctor.Name} {doctor.Surname} {doctor.Type}";
+                str = $"{doctor.Name} {doctor.Surname} {doctor.Type}";
+                AddToMapModelString(doctor, str);
+                return str;
             }
-            if(model is AppointmentTimeModel appointmentTime)
+            if (model is AppointmentTimeModel appointmentTime)
             {
-                return $"с {appointmentTime.StartTime:hh\\:mm} по {appointmentTime.EndTime:hh\\:mm}";
+                str = $"с {appointmentTime.StartTime:hh\\:mm} по {appointmentTime.EndTime:hh\\:mm}";
+                AddToMapModelString(appointmentTime, str);
+                return str;
             }
             return "Unknown";
+        }
+
+        private void AddToMapModelString(AbstractModel model, string stringModel)
+        {
+            stringModelDictionary.Add(stringModel, model);
         }
     }
 }

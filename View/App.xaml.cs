@@ -16,8 +16,11 @@ namespace View
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            var w = new MainWindow();
-            w.DataContext = new HospitalViewModel();
+            var w = new MainWindow
+            {
+                DataContext = new HospitalViewModel()
+            };
+
             w.Show();
         }
     }

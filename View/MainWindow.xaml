@@ -30,9 +30,9 @@
             <Label Content="Введите фамилию:"  Height="27" FontSize="14"/>
             <TextBox x:Name="SurnameTextBox" Height="27" Text="{Binding PatientViewModel.PatientSurname}" FontSize="14"/>
             <Label Content="Выберите врача:" Height="27" FontSize="14"/>
-            <ComboBox Height="27" FontSize="14" ItemsSource="{Binding DoctorModels}" SelectedItem="{Binding DoctorViewModel.SelectedDoctor}"/>
+            <ComboBox Height="27" FontSize="14" ItemsSource="{Binding DoctorModels}" SelectedItem="{Binding SelectedDoctor}"/>
             <Label Content="Выберите время приема:" Height="27" FontSize="14"/>
-            <ComboBox Height="27" FontSize="14" ItemsSource="{Binding DoctorViewModel.ListFreeTimesDoctor}" SelectedItem="{Binding AppointmentTimeViewModel.SelectedAppointmentTimeModel}"/>
+            <ComboBox Height="27" FontSize="14" ItemsSource="{Binding AppointmentTimeModels}" SelectedItem="{Binding SelectedAppointmetTime}"/>
 
         </StackPanel>
         <StackPanel Grid.Row="1" Grid.Column="2" VerticalAlignment="Bottom">

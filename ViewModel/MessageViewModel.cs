@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ViewModel
 {
-    public class MessageViewModel : ReactiveObject
+    public class MessageViewModel : BaseViewModel
     {
         private string _message; 
         private string _typeMessage;

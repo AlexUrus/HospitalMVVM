@@ -3,7 +3,7 @@ using ReactiveUI;
 
 namespace ViewModel
 {
-    public class PatientViewModel : ReactiveObject
+    public class PatientViewModel : BaseViewModel
     {
         private string? _patientName;
         private string? _patientSurname;

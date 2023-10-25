@@ -4,23 +4,23 @@ using ReactiveUI;
 
 namespace ViewModel
 {
-    public class AppointmentTimeViewModel : ReactiveObject
+    public class AppointmentTimeViewModel : BaseViewModel
     {
-        private AppointmentTimeModel? _selectedAppointmentTimeModel;
+        private AppointmentTimeModel? _appointmentTimeModel;
 
-        public AppointmentTimeModel? SelectedAppointmentTimeModel
+        public AppointmentTimeModel? AppointmentTimeModel
         {
-            get => _selectedAppointmentTimeModel;
-            set => this.RaiseAndSetIfChanged(ref _selectedAppointmentTimeModel, value);
+            get => _appointmentTimeModel;
+            set => this.RaiseAndSetIfChanged(ref _appointmentTimeModel, value);
         } 
 
         public void ClearFields()
         {
-            SelectedAppointmentTimeModel = null;
+            AppointmentTimeModel = null;
         }
         public bool IsCanCreateAppointment()
         {
-            return SelectedAppointmentTimeModel != null;
+            return AppointmentTimeModel != null;
         }
     }
 }

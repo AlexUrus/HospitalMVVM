@@ -9,11 +9,21 @@ using System.Threading.Tasks;
 
 namespace ViewModel
 {
-    public class DoctorViewModel : ReactiveObject
+    public class DoctorViewModel : BaseViewModel
     { 
         private DoctorModel? _doctor;
+        private string _doctorFIO;
         private ObservableCollection<AppointmentTimeModel> _listFreeTimesDoctor;
         
+        public string DoctorFIO
+        {
+            get => _doctorFIO;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _doctorFIO, value);
+
+            }
+        }
         public DoctorModel? Doctor
         {
             get => _doctor;
