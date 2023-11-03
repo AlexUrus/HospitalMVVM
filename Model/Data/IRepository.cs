@@ -15,5 +15,11 @@ namespace Model.Data
         public void InitTypeDoctorModels();
         public void InitDoctors();
         public void InitAppointmentTimes();
+        public void CreatePatient(string name, string surname);
+        public bool PatientExists(string name, string surname);
+        public PatientModel GetPatientModel(string name, string surname);
+        public void CreateAppointment(PatientModel patientModel, DoctorModel doctorModel, AppointmentTimeModel appointmentTimeModel);
+
+        public ICollection<AppointmentTimeModel> GetListFreeTimesDoctor(DoctorModel doctorModel);
     }
 }

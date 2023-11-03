@@ -5,19 +5,24 @@ namespace Model.Model
 {
     public class HospitalModel : AbstractModel
     {
+        private IRepository _repository;
+        public ICollection<DoctorModel> DoctorModels { get; private set; }
+        public ICollection<AppointmentTimeModel> AppointmentTimeModels { get; private set; }
+        public ICollection<TypeDoctorModel> TypeDoctorModels { get; private set; }
+
         public HospitalModel(IRepository repository)
         {
             _repository = repository;
+            Init();
+        }
 
+        private void Init()
+        {
             InitTypeDoctors();
             InitDoctors();
             InitAppointmentTimes();
         }
 
-        private IRepository _repository;
-        public ICollection<DoctorModel> DoctorModels { get; private set; }
-        public ICollection<AppointmentTimeModel> AppointmentTimeModels { get; private set; }
-        public ICollection<TypeDoctorModel> TypeDoctorModels { get; private set; }
         private void InitTypeDoctors()
         {
             TypeDoctorModels = _repository.GetTypeDoctorModels();
