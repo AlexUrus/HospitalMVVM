@@ -3,7 +3,7 @@ using ReactiveUI;
 using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Reactive.Linq;
-
+using ViewModel.Mappers;
 
 namespace ViewModel
 {
@@ -21,6 +21,9 @@ namespace ViewModel
 
         private string _selectedDoctor;
         private string _selectedAppointmetTime;
+
+        private DoctorModelToStrMapper _doctorModelToStrMapper;
+        private AppointmentTimeModelToStrMapper _appointmentTimeModelToStrMapper;
         
         #endregion
 
@@ -62,7 +65,7 @@ namespace ViewModel
             {
                 this.RaiseAndSetIfChanged(ref _selectedDoctor, value);
                 if (value != null)
-                    _doctorViewModel.Doctor = (DoctorModel)GetModel(_selectedDoctor);
+                    _doctorViewModel.Doctor = _doctorModelToStrMapper.StringToModel( _selectedDoctor);
             }
         }
 
@@ -73,7 +76,7 @@ namespace ViewModel
             {
                 this.RaiseAndSetIfChanged(ref _selectedAppointmetTime, value);
                 if(value != null)
-                    _appointmentTimeViewModel.AppointmentTimeModel = (AppointmentTimeModel) GetModel(_selectedAppointmetTime);
+                    _appointmentTimeViewModel.AppointmentTimeModel = _appointmentTimeModelToStrMapper.StringToModel(_selectedAppointmetTime);
             }
         }
         #endregion
@@ -86,6 +89,7 @@ namespace ViewModel
         public HospitalViewModel(HospitalModel hospitalModel)
         {
             InitViewModels();
+            InitMappers();
             InitModels(hospitalModel);
             InitAndSubscribeUpdateCanCreate();
             InitAndSubscribeUpdateListTakenTimesDoctor();
@@ -108,6 +112,12 @@ namespace ViewModel
             _hospitalModel = hospitalModel;
             AppointmentTimeModels = new ObservableCollection<string>(ConvertModelListToString(_hospitalModel.AppointmentTimeModels));
             DoctorModels = new ObservableCollection<string>(ConvertModelListToString(_hospitalModel.DoctorModels));
+        }
+
+        public void InitMappers()
+        {
+            _appointmentTimeModelToStrMapper = new AppointmentTimeModelToStrMapper();
+            _doctorModelToStrMapper = new DoctorModelToStrMapper();
         }
 
         private void InitAndSubscribeUpdateCanCreate()
@@ -185,7 +195,7 @@ namespace ViewModel
             _messageViewModel.ShowMessage(message, type);
         }
 
-        private ICollection<string> ConvertModelListToString<T>(ICollection<T> models) where T : AbstractModel
+        private ICollection<string> ConvertModelListToString<Model>(ICollection<Model> models) where Model : AbstractModel
         {
             List<string> listDoctorModelStrings = new List<string>();
 
@@ -199,25 +209,15 @@ namespace ViewModel
 
         private string ModelToString(AbstractModel model)
         {
-            string str;
             if (model is DoctorModel doctor)
             {
-                str = $"{doctor.Name} {doctor.Surname} {doctor.Type}";
-                AddToMapModelString(doctor, str);
-                return str;
+                return _doctorModelToStrMapper.ModelToString(doctor);
             }
             if (model is AppointmentTimeModel appointmentTime)
             {
-                str = $"с {appointmentTime.StartTime:hh\\:mm} по {appointmentTime.EndTime:hh\\:mm}";
-                AddToMapModelString(appointmentTime, str);
-                return str;
+                return _appointmentTimeModelToStrMapper.ModelToString(appointmentTime);
             }
             return "Unknown";
-        }
-
-        private void AddToMapModelString(AbstractModel model, string stringModel)
-        {
-            stringModelDictionary.Add(stringModel, model);
         }
     }
 }
