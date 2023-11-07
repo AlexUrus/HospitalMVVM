@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ViewModel.Mappers
+namespace Mappers
 {
     public class DoctorModelToStrMapper: IMapperModelToStr<DoctorModel>
     {

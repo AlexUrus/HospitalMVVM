@@ -1,0 +1,48 @@
+﻿@page
+@using Web.Pages;
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<head>
+    <link href="~/css/styles.css" rel="stylesheet">
+    <link href="~/css/reset.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <div class="wrapper">        
+        <div class="container">
+            <div class="main-body">
+                <h2>Введите имя:</h2>
+                <input type="text" name="Name">
+                <h2>Введите фамилию:</h2>
+                <input type="text" name="Surname">
+                <h2>Выберите врача:</h2>
+                <table class="table">
+                    <thead>
+                        <tr><th>ФИО Должность</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var doctor in Model.Doctors)
+                        {
+                            <tr><td>@doctor</td></tr>
+                        }
+                    </tbody>
+                </table>
+                <h2>Выберите время приема:</h2>
+                <select name="AppointmentTime" id="AppointmentTime-select">
+                    <option value="">Выберите время приема</option>
+                    <option value="dog">Dog</option>
+                    <option value="cat">Cat</option>
+                    <option value="hamster">Hamster</option>
+                    <option value="parrot">Parrot</option>
+                    <option value="spider">Spider</option>
+                    <option value="goldfish">Goldfish</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</body>
+

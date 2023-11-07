@@ -1,0 +1,20 @@
+html, body {
+    height: 100%;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+.wrapper {
+    min-height: 100%;
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.main-body {
+    justify-self: center;
+}

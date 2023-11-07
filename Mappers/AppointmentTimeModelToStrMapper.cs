@@ -1,6 +1,6 @@
 ﻿using Model.Model;
 
-namespace ViewModel.Mappers
+namespace Mappers
 {
     public class AppointmentTimeModelToStrMapper : IMapperModelToStr<AppointmentTimeModel>
     {

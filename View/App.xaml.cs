@@ -18,7 +18,7 @@ namespace View
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            IRepository repository = new DataRepository();
+            IRepository repository = new HospitalRepository();
             HospitalModel hospitalModel = new HospitalModel(repository);
             var w = new MainWindow
             {

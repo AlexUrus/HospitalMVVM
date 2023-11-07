@@ -6,11 +6,11 @@ using System.Collections.ObjectModel;
 
 namespace Model.Data
 {
-    public class DataRepository : IRepository
+    public class HospitalRepository : IRepository
     {
         private HospitalContext _context;
 
-        public DataRepository()
+        public HospitalRepository()
         {
             _context = new HospitalContext();
         }

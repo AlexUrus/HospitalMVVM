@@ -3,7 +3,7 @@ using ReactiveUI;
 using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Reactive.Linq;
-using ViewModel.Mappers;
+using Mappers;
 
 namespace ViewModel
 {
