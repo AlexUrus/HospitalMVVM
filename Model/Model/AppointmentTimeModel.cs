@@ -10,6 +10,7 @@ namespace Model.Model
         public AppointmentTimeModel(int id, TimeSpan startTime, TimeSpan endTime) 
         {
             Id = id;
+            if (endTime < startTime) throw new ArgumentNullException("Невозможно создать время записи");
             StartTime = startTime;
             EndTime = endTime;
         }
