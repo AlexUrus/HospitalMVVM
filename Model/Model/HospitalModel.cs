@@ -16,6 +16,37 @@ namespace Model.Model
             Init();
         }
 
+        public string CallCreateAppointment(PatientModel? patientModel, DoctorModel doctorModel, AppointmentTimeModel appointmentTimeModel)
+        {
+            if (patientModel != null)
+            {
+                CreateAppointment(patientModel, doctorModel, appointmentTimeModel);
+                return "OK";
+            }
+            else
+            {
+                return "Error";
+            }
+        }
+
+        public PatientModel? CreatePatient(string name, string surname)
+        {
+            if (PatientExists(name, surname))
+            {
+                return null;
+            }
+            else
+            {
+                _repository.CreatePatient(name, surname);
+                return GetPatientModel(name, surname);
+            }
+        }
+
+        public ICollection<AppointmentTimeModel> GetListFreeTimesDoctor(DoctorModel doctorModel)
+        {
+            return _repository.GetListFreeTimesDoctor(doctorModel);
+        }
+
         private void Init()
         {
             InitTypeDoctors();
@@ -45,7 +76,7 @@ namespace Model.Model
             }
         }
 
-        public void InitAppointmentTimes()
+        private void InitAppointmentTimes()
         {
             AppointmentTimeModels = _repository.GetAppointmentTimes();
 
@@ -54,37 +85,6 @@ namespace Model.Model
                 _repository.InitAppointmentTimes();
                 AppointmentTimeModels = _repository.GetAppointmentTimes();
             }
-        }
-
-        public string CallCreateAppointment(PatientModel? patientModel, DoctorModel doctorModel, AppointmentTimeModel appointmentTimeModel)
-        {
-            if(patientModel != null)
-            {
-                CreateAppointment(patientModel, doctorModel, appointmentTimeModel);
-                return "OK";
-            }
-            else
-            {
-                return "Error";
-            }
-        }
-
-        public PatientModel? CreatePatient(string name, string surname)
-        {
-            if (PatientExists(name, surname))
-            {
-                return null;
-            }
-            else
-            {
-                _repository.CreatePatient(name, surname);
-                return GetPatientModel(name, surname);
-            }
-        }
-
-        public ICollection<AppointmentTimeModel> GetListFreeTimesDoctor(DoctorModel doctorModel)
-        {
-            return _repository.GetListFreeTimesDoctor(doctorModel);
         }
 
         private bool PatientExists(string name, string surname)
