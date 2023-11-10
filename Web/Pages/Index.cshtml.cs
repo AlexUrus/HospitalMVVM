@@ -1,7 +1,6 @@
 using Mappers;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Model.Data;
 using Model.Model;
 
@@ -13,10 +12,16 @@ namespace Web.Pages
         private DoctorModelToStrMapper _doctorModelToStrMapper;
         private AppointmentTimeModelToStrMapper _appointmentTimeModelToStrMapper;
 
-        public string NamePatient { get; set; }
-        public string SurnamePatient { get; set; }
-        public ICollection<string> Doctors { get; set; }
-        public ICollection<string> AppointmentTimeModels { get; set; }
+        public string NamePatient { 
+            get; 
+            set; }
+        public string SurnamePatient {
+            get;
+            set; }
+        public ICollection<SelectListItem> Doctors { get; set; }
+        public ICollection<SelectListItem> AppointmentTimes { get; set; }
+
+        public string NameBtnCreateAppointment { get; set; } = "Записаться на прием";
 
         public IndexModel(IRepository repository)
         {
@@ -26,34 +31,47 @@ namespace Web.Pages
         }
         public void OnGet()
         {
-            NamePatient = string.Empty;
-            SurnamePatient = string.Empty;
             Doctors = DoctorsToString(_hospitalModel.DoctorModels);
-            AppointmentTimeModels = AppointmentTimeModelsToString(_hospitalModel.AppointmentTimeModels);
+            AppointmentTimes = AppointmentTimesToString(_hospitalModel.AppointmentTimeModels);
         }
 
-        public ICollection<string> DoctorsToString(ICollection<DoctorModel> doctorModels)
+        public ICollection<SelectListItem> DoctorsToString(ICollection<DoctorModel> doctorModels)
         {
-            var doctorStringModels = new List<string>();
+            var doctorStringModels = new List<SelectListItem>();
 
             foreach (var doctorModel in doctorModels)
             {
-                doctorStringModels.Add(_doctorModelToStrMapper.ModelToString(doctorModel));
+                string modelToString = _doctorModelToStrMapper.ModelToString(doctorModel);
+                doctorStringModels.Add(new SelectListItem
+                {   
+                    Value = modelToString,
+                    Text = modelToString
+                });
             }
 
             return doctorStringModels;
         }
 
-        public ICollection<string> AppointmentTimeModelsToString(ICollection<AppointmentTimeModel> appointmentTimeModels)
+        public ICollection<SelectListItem> AppointmentTimesToString(ICollection<AppointmentTimeModel> appointmentTimeModels)
         {
-            var appointmentTimeStringModels = new List<string>();
+            var appointmentTimeStringModels = new List<SelectListItem>();
 
             foreach (var appointmentTimeModel in appointmentTimeModels)
             {
-                appointmentTimeStringModels.Add(_appointmentTimeModelToStrMapper.ModelToString(appointmentTimeModel));
+                string modelToString = _appointmentTimeModelToStrMapper.ModelToString(appointmentTimeModel);
+                appointmentTimeStringModels.Add(new SelectListItem
+                {
+                    Value = modelToString,
+                    Text = modelToString
+                });
             }
 
             return appointmentTimeStringModels;
+        }
+
+        public void CallCreateAppointment()
+        {
+
         }
     }
 }

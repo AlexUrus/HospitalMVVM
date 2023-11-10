@@ -1,6 +1,7 @@
 html, body {
     height: 100%;
     font-family: Verdana, Arial, Helvetica, sans-serif;
+    background-color: darkgrey;
 }
 
 .wrapper {
@@ -17,4 +18,13 @@ html, body {
 
 .main-body {
     justify-self: center;
+}
+
+.form-control {
+    font-display:auto;
+    height: 40px;
+}
+
+.textbox{
+    height: 40px;
 }
