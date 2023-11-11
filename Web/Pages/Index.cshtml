@@ -15,19 +15,21 @@
     <div class="wrapper">        
         <div class="container">
             <div class="main-body">
-                <h2>Введите имя:</h2>
-                @Html.TextBox("NameTextBox", @Model.NamePatient, new { @class = "textbox" })
-                <h2>Введите фамилию:</h2>
-                <input type="text" name="Surname" value="@Model.SurnamePatient" class="textbox">
-                <h2>Выберите врача:</h2>
-                <div class="droplist">
-                    @Html.DropDownList("DoctorsDropList", Model.Doctors, new { @class = "form-control" })
-                </div>
-                <h2>Выберите время приема:</h2>
-                <div class="drop">
-                    @Html.DropDownList("AppointmentTimeDropList", Model.AppointmentTimes, new { @class = "form-control" })
-                </div>
-                <input type="button" name="createAppointment"/>
+                <form method="post" action="Index">
+                    <h2>Введите имя:</h2>
+                    <input type="text" asp-for="@Model.NamePatient" />
+                    <h2>Введите фамилию:</h2>
+                    <input type="text" asp-for="SurnamePatient">
+                    <h2>Выберите врача:</h2>
+                    <div class="droplist">
+                        @Html.DropDownList("DoctorsDropList", Model.Doctors, new { @class = "form-control" })
+                    </div>
+                    <h2>Выберите время приема:</h2>
+                    <div class="drop">
+                        @Html.DropDownList("AppointmentTimeDropList", Model.AppointmentTimes, new { @class = "form-control" })
+                    </div>
+                    <input type="submit" name="createAppointment" />
+                </form>
             </div>
         </div>
     </div>

@@ -1,4 +1,6 @@
+using Azure;
 using Mappers;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Model.Data;
@@ -12,16 +14,15 @@ namespace Web.Pages
         private DoctorModelToStrMapper _doctorModelToStrMapper;
         private AppointmentTimeModelToStrMapper _appointmentTimeModelToStrMapper;
 
-        public string NamePatient { 
-            get; 
-            set; }
-        public string SurnamePatient {
-            get;
-            set; }
+        [BindProperty]
+        public string NamePatient { get; set; } = "";
+        [BindProperty]
+        public string SurnamePatient { get; set; } = "";
         public ICollection<SelectListItem> Doctors { get; set; }
         public ICollection<SelectListItem> AppointmentTimes { get; set; }
 
         public string NameBtnCreateAppointment { get; set; } = "Записаться на прием";
+        public string Message { get; private set; } = "";
 
         public IndexModel(IRepository repository)
         {
@@ -31,8 +32,15 @@ namespace Web.Pages
         }
         public void OnGet()
         {
+            Message = "Введите данные";
             Doctors = DoctorsToString(_hospitalModel.DoctorModels);
             AppointmentTimes = AppointmentTimesToString(_hospitalModel.AppointmentTimeModels);
+        }
+
+        public void OnPost(string namePatient, string surnamePatient)
+        {
+            NamePatient = namePatient; SurnamePatient = surnamePatient;
+            Message = $"Имя: {NamePatient} Фамилия: {SurnamePatient}";
         }
 
         public ICollection<SelectListItem> DoctorsToString(ICollection<DoctorModel> doctorModels)
