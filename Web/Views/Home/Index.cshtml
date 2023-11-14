@@ -1,0 +1,8 @@
+﻿@model IEnumerable<PatientWebModel>
+<h2>Все записи</h2>
+<table>
+    @foreach (var patient in Model)
+    {
+        <tr><td>@patient.Name</td><td>@patient.Surname</td></tr>
+    }
+</table>
