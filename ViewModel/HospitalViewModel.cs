@@ -195,7 +195,7 @@ namespace ViewModel
             _messageViewModel.ShowMessage(message, type);
         }
 
-        private ICollection<string> ConvertModelListToString<Model>(ICollection<Model> models) where Model : AbstractModel
+        private ICollection<string> ConvertModelListToString<Model>(ICollection<Model> models) where Model: class
         {
             List<string> listDoctorModelStrings = new List<string>();
 
@@ -207,7 +207,7 @@ namespace ViewModel
             return listDoctorModelStrings;
         }
 
-        private string ModelToString(AbstractModel model)
+        private string ModelToString(object model)
         {
             if (model is DoctorModel doctor)
             {
