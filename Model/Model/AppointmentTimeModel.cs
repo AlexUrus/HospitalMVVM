@@ -1,7 +1,7 @@
 ﻿
 namespace Model.Model
 {
-    public class AppointmentTimeModel : AbstractModel
+    public class AppointmentTimeModel 
     {
         public int Id { get; private set; }
         public TimeSpan StartTime { get; private set; }

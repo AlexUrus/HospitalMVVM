@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Model.Model
 {
-    public class AppointmentModel : AbstractModel
+    public class AppointmentModel
     {
         public int Id { get; private set; }
         public DoctorModel DoctorModel { get; private set; }
