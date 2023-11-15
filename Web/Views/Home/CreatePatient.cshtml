@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AppointmentTimeWebModel>
+﻿@model IEnumerable<PatientWebModel>
 
 <form method="post">
     <p>
@@ -7,11 +7,16 @@
     </p>
     <p>
         <label>Фамилия</label><br />
-        <input type="date" name="Date" />
+        <input type="text" name="Surname" />
     </p>
     <p>
-        <label>Время</label><br />
-        <input type="time" name="Time" />
+        <label>Доктор</label><br />
+        <select name="Doctor">
+            @foreach (var patient in Model)
+            {
+                <tr><td>@patient.Name</td><td>@patient.Surname</td></tr>
+            }
+        </select>
     </p>
     <p>
         <input type="submit" value="Отправить" />
