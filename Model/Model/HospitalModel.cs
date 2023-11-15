@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 namespace Model.Model
 {
-    public class HospitalModel : AbstractModel
+    public class HospitalModel 
     {
         private IRepository _repository;
         public ICollection<DoctorModel> DoctorModels { get; private set; }

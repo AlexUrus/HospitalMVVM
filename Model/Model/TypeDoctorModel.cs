@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Model.Model
 {
-    public class TypeDoctorModel : AbstractModel
+    public class TypeDoctorModel 
     {
         public int Id { get; init; }
         public string Type { get; init; }
@@ -15,11 +15,6 @@ namespace Model.Model
         {
             Id = id;
             Type = type;
-        }
-
-        public override string ToString()
-        {
-            return Type;
         }
     }
 }
