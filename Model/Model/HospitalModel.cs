@@ -1,4 +1,5 @@
 ﻿using Model.Data;
+using Model.EFModel;
 using System.Collections.ObjectModel;
 
 namespace Model.Model
@@ -71,7 +72,7 @@ namespace Model.Model
 
             if (DoctorModels.Count == 0)
             {
-                _repository.InitDoctors();
+                _repository.InitDoctors(TypeDoctorModels);
                 DoctorModels = _repository.GetDoctorModels();
             }
         }
