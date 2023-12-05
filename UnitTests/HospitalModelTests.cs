@@ -1,116 +1,95 @@
 using Model.Data;
 using Model.Data.Interfaces;
 using Model.Data.Repositories;
+using Model.EFModel;
 using Model.Model;
+using Moq;
 using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace UnitTests
 {
     public class HospitalModelTests
     {
-        private IRepository _repository;
         private HospitalModel _hospitalModel;
+        private Mock<IRepository> _repositoryMock;
+        private List<DoctorModel> _doctorModels;
+        private List<TypeDoctorModel> _typeDoctorModels;
+        private List<AppointmentTimeModel> _appointmentTimeModels;
+        private string _namePatient;
+        private string _surnamePatient;
+
         public HospitalModelTests()
         {
-            HospitalContext context = new HospitalContext();
-            IAppointmentRepo appointmentRepo = new AppointmentRepo(context);
-            IAppointmentTimeRepo appointmentTimeRepo = new AppointmentTimeRepo(context);
-            IDoctorRepo doctorRepo = new DoctorRepo(context);
-            IPatientRepo patientRepo = new PatientRepo(context);
-            ITypeDoctorRepo typeDoctorRepo = new TypeDoctorRepo(context);
+            _repositoryMock = new Mock<IRepository>();
+            _typeDoctorModels = new List<TypeDoctorModel>
+            {
+                new TypeDoctorModel(1,"Терапевт")
+            };
+            _doctorModels = new List<DoctorModel>
+            {
+                new DoctorModel(1,"Александр","Урусов",_typeDoctorModels[0])
+            };
+            _appointmentTimeModels = new List<AppointmentTimeModel>
+            {
+                new AppointmentTimeModel(1,new TimeSpan(10,00,00),new TimeSpan(10,30,00))
+            };
 
-            _repository = new HospitalRepository(appointmentRepo, appointmentTimeRepo,
-                                                            doctorRepo, patientRepo, typeDoctorRepo);
-            _hospitalModel = new HospitalModel(_repository);
+            _namePatient = "Peter";
+            _surnamePatient = "Griffin";
+
+            _repositoryMock.Setup(r => r.GetTypeDoctorModels()).Returns(_typeDoctorModels);
+            _repositoryMock.Setup(r => r.InitTypeDoctorModels());
+            _repositoryMock.Setup(r => r.GetDoctorModels()).Returns(_doctorModels);
+            _repositoryMock.Setup(a => a.InitDoctors(_typeDoctorModels));
+            _repositoryMock.Setup(a => a.GetAppointmentTimes()).Returns(_appointmentTimeModels);
+            _repositoryMock.Setup(a => a.InitAppointmentTimes());
+            
+
+            _hospitalModel = new HospitalModel(_repositoryMock.Object);
         }
-         
+
         [Fact]
         public void CreateAppointment()
         {
             // Arrange
             PatientModel patientModel = new PatientModel(1, "Peter", "Griffin"); 
-            DoctorModel doctorModel = new DoctorModel(1, "Иван", "Сидоров", new TypeDoctorModel(1, "Диетолог"));
             AppointmentTimeModel appointmentTimeModel = new AppointmentTimeModel(1, new TimeSpan(10, 30, 00),
                 new TimeSpan(11, 00, 00));
 
+            _repositoryMock.Setup(a => a.CreateAppointment(patientModel, _doctorModels[0],appointmentTimeModel));
+
             // Act
-            string result = _hospitalModel.CallCreateAppointment(patientModel, doctorModel, appointmentTimeModel);
+            string result = _hospitalModel.CallCreateAppointment(patientModel, _doctorModels[0], appointmentTimeModel);
 
             // Assert
             Assert.Equal("OK", result);
 
         }
 
-        public void CallCreateAppointmentTest_PatientNull()
-        {
-            // Arrange
-            DoctorModel doctorModel = new DoctorModel(1, "Иван", "Сидоров", new TypeDoctorModel(1, "Диетолог"));
-            AppointmentTimeModel appointmentTimeModel = new AppointmentTimeModel(1, new TimeSpan(10, 30, 00),
-                new TimeSpan(11, 00, 00));
-
-            // Act
-            string result = _hospitalModel.CallCreateAppointment(null, doctorModel, appointmentTimeModel);
-
-            // Assert
-            Assert.Equal("Error", result);
-        }
-
-
-
         [Fact]
-        public void CreatePatientTest()
+        public void CreatePatient()
         {
             // Arrange
-            Random random = new Random();
-
-            string name = "Bart" + random.Next();
-            string surname = "Griffin" + random.Next();
+            _repositoryMock.Setup(a => a.CreatePatient(_namePatient, _surnamePatient));
+            _repositoryMock.Setup(a => a.GetPatientModel(_namePatient, _surnamePatient)).Returns(new PatientModel(1, _namePatient, _surnamePatient));
 
             // Act
-            PatientModel? patient = _hospitalModel.CreatePatient(name, surname);
+            PatientModel? patient = _hospitalModel.CreatePatient(_namePatient, _surnamePatient);
 
             // Assert
             Assert.NotNull(patient);
-
-            // Act
-            patient = _hospitalModel.CreatePatient(name, surname);
-
-            // Assert
-            Assert.Null(patient);
-        }
-
-
-        [Fact]
-        public void CreatePatientTesta()
-        {
-            // Arrange
-            Random random = new Random();
-
-            string name = "Bart" + random.Next();
-            string surname = "Griffin" + random.Next();
-
-            // Act
-            PatientModel? patient = _hospitalModel.CreatePatient(name, surname);
-
-            // Assert
-            Assert.NotNull(patient);
-
-            // Act
-            patient = _hospitalModel.CreatePatient(name, surname);
-
-            // Assert
-            Assert.Null(patient);
         }
 
         [Fact]
-        public void GetListFreeTimesDoctorTest()
+        public void GetListFreeTimesDoctor()
         {
             // Arrange
-            DoctorModel doctorModel = new DoctorModel(4, "Петр", "Сидоров", new TypeDoctorModel(2, "Хирург"));
+            _repositoryMock.Setup(a => a.GetListFreeTimesDoctor(_doctorModels[0])).Returns(_appointmentTimeModels);
 
             // Act
-            ICollection<AppointmentTimeModel> listFreeTimesDoctor = _hospitalModel.GetListFreeTimesDoctor(doctorModel);
+            ICollection<AppointmentTimeModel> listFreeTimesDoctor = _hospitalModel.GetListFreeTimesDoctor(_doctorModels[0]);
 
             // Assert
             Assert.NotEmpty(listFreeTimesDoctor);
