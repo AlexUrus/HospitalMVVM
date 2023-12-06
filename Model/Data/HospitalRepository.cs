@@ -50,11 +50,6 @@ namespace Model.Data
             _doctorRepo.InitDoctors(typeDoctors);
         }
 
-        public ICollection<AppointmentTimeModel> GetListFreeTimesDoctor(DoctorModel doctorModel)
-        {
-            return _appointmentTimeRepo.GetListFreeTimesDoctor(doctorModel);
-        }
-
         public ICollection<DoctorModel> GetDoctorModels()
         {
             return _doctorRepo.GetDoctorModels();
@@ -78,6 +73,16 @@ namespace Model.Data
         public ICollection<TypeDoctorModel> GetTypeDoctorModels()
         {
             return _typeDoctorRepo.GetTypeDoctorModels();
+        }
+
+        public AppointmentModel? GetAppointmentModel(int id)
+        {
+            return _appointmentRepo.GetAppointment(id);
+        }
+
+        public ICollection<AppointmentModel> GetAppointmentModelsByDoctorId(int doctorId)
+        {
+            return _appointmentRepo.GetAppointmentModelsByDoctorId(doctorId);
         }
     }
 }

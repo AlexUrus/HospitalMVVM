@@ -14,10 +14,12 @@ namespace Model.Data.Repositories
     public class AppointmentTimeRepo : IAppointmentTimeRepo
     {
         private readonly HospitalContext _context;
+
         public AppointmentTimeRepo(HospitalContext context)
         {
             _context = context;
         }
+
         public ICollection<AppointmentTimeModel> GetAppointmentTimes()
         {
             ICollection<AppointmentTimeModel> appointmentTimeModels;
@@ -30,30 +32,6 @@ namespace Model.Data.Repositories
                     appointmentTimeModels.Add(new AppointmentTimeModel(appointmentTime.Id, appointmentTime.StartTime, appointmentTime.EndTime));
                 }
                 return appointmentTimeModels;
-            }
-            catch (SqlException ex)
-            {
-                Console.WriteLine(ex.Message);
-                return null;
-            }
-        }
-
-        public ICollection<AppointmentTimeModel> GetListFreeTimesDoctor(DoctorModel doctorModel)
-        {
-            try
-            {
-                ICollection<AppointmentTimeModel> allAppointmentTimes = GetAppointmentTimes();
-
-                var busyTimes = _context.Appointments
-                    .Where(a => a.Doctor == ConverterModelToEF.Convert(doctorModel))
-                    .Select(a => a.AppointmentTime.Id)
-                    .ToList();
-
-                var freeTimes = allAppointmentTimes
-                    .Where(time => !busyTimes.Contains(time.Id))
-                    .ToList();
-
-                return freeTimes;
             }
             catch (SqlException ex)
             {

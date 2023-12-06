@@ -24,7 +24,8 @@ namespace ViewModel
 
         private DoctorModelToStrMapper _doctorModelToStrMapper;
         private AppointmentTimeModelToStrMapper _appointmentTimeModelToStrMapper;
-        
+        private TypeDoctorModelToStrMapper _typeDoctorModelToStrMapper;
+
         #endregion
 
         #region Properties
@@ -216,6 +217,10 @@ namespace ViewModel
             if (model is AppointmentTimeModel appointmentTime)
             {
                 return _appointmentTimeModelToStrMapper.ModelToString(appointmentTime);
+            }
+            if(model is TypeDoctorModel typeDoctor)
+            {
+                return _typeDoctorModelToStrMapper.ModelToString(typeDoctor);
             }
             return "Unknown";
         }

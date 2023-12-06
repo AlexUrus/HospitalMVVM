@@ -12,7 +12,18 @@ namespace Model.EFModel
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public Doctor Doctor { get; set; }
+
+        [ForeignKey("Doctor")]
+        public int DoctorId { get; set; }
+
+        [ForeignKey("Patient")]
         public Patient Patient { get; set; }
+
+        [ForeignKey("Patient")]
+        public int PatientId { get; set; }
         public AppointmentTime AppointmentTime { get; set; }
+
+        [ForeignKey("AppointmentTime")]
+        public int AppointmentTimeId { get; set; }
     }
 }

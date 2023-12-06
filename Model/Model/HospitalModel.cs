@@ -45,7 +45,16 @@ namespace Model.Model
 
         public ICollection<AppointmentTimeModel> GetListFreeTimesDoctor(DoctorModel doctorModel)
         {
-            return _repository.GetListFreeTimesDoctor(doctorModel);
+            ICollection<AppointmentTimeModel> listFreeTimesDoctor = _repository.GetAppointmentTimes();
+
+            ICollection<AppointmentModel> listAppointmentsModelsDoctor = _repository.GetAppointmentModelsByDoctorId(doctorModel.Id);
+
+            foreach (var item in listAppointmentsModelsDoctor)
+            {
+                listFreeTimesDoctor.Remove(item.AppointmentTimeModel);
+            }
+
+            return listFreeTimesDoctor;
         }
 
         private void Init()

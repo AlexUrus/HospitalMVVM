@@ -24,7 +24,8 @@ namespace Model.Data.Repositories
             ICollection<DoctorModel> doctorModels;
             try
             {
-                ICollection<Doctor> listDoctor = _context.Doctors.ToList();
+                ICollection<Doctor> listDoctor = _context.Doctors.Include(x => x.Type).ToList();
+
                 doctorModels = new List<DoctorModel>();
 
                 foreach (Doctor doctor in listDoctor)
@@ -58,34 +59,34 @@ namespace Model.Data.Repositories
                     {
                         Name = "Иван",
                         Surname = "Иванов",
-                        Type = typeDoctors.FirstOrDefault(t => t.Type == "Терапевт")
+                        TypeId = typeDoctors.FirstOrDefault(t => t.Type == "Терапевт").Id
                     },
                     new Doctor()
                     {
                         Name = "Михаил",
                         Surname = "Михайлов",
-                        Type = typeDoctors.FirstOrDefault(t => t.Type == "Дерматолог")
+                        TypeId = typeDoctors.FirstOrDefault(t => t.Type == "Дерматолог").Id
                     },
                     new Doctor()
                     {
                         Name = "Петр",
                         Surname = "Петров",
-                        Type = typeDoctors.FirstOrDefault(t => t.Type == "ЛОР")
+                        TypeId = typeDoctors.FirstOrDefault(t => t.Type == "ЛОР").Id
                     },
                     new Doctor()
                     {
                         Name = "Сидр",
                         Surname = "Сидоров",
-                        Type = typeDoctors.FirstOrDefault(t => t.Type == "Психолог")
+                        TypeId = typeDoctors.FirstOrDefault(t => t.Type == "Психолог").Id
                     },
                     new Doctor()
                     {
                         Name = "Александр",
                         Surname = "Александров",
-                        Type = typeDoctors.FirstOrDefault(t => t.Type == "Гастроэнтеролог")
+                        TypeId = typeDoctors.FirstOrDefault(t => t.Type == "Гастроэнтеролог").Id
                     }
                 };
-
+                _context.ChangeTracker.Clear();
                 _context.Doctors.AddRange(doctors);
                 _context.SaveChanges();
             }

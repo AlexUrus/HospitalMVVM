@@ -10,6 +10,7 @@ namespace Model.Data.Interfaces
     public interface IAppointmentRepo
     {
         public void CreateAppointment(PatientModel patientModel, DoctorModel doctorModel, AppointmentTimeModel appointmentTimeModel);
-
+        public AppointmentModel? GetAppointment(int id);
+        public ICollection<AppointmentModel> GetAppointmentModelsByDoctorId(int doctorId);
     }
 }

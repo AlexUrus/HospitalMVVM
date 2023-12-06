@@ -16,6 +16,9 @@ namespace Model.EFModel
         public string Name { get; set; }
         public string Surname { get; set; }
         public TypeDoctor Type { get; set; }
+
+        [ForeignKey("Type")]
+        public int TypeId { get; set; }
        
     }
 }

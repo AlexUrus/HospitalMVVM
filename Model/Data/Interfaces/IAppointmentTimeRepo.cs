@@ -11,6 +11,5 @@ namespace Model.Data.Interfaces
     {
         public void InitAppointmentTimes();
         public ICollection<AppointmentTimeModel> GetAppointmentTimes();
-        public ICollection<AppointmentTimeModel> GetListFreeTimesDoctor(DoctorModel doctorModel);
     }
 }

@@ -20,6 +20,7 @@ namespace Model.Data
         public bool PatientExists(string name, string surname);
         public PatientModel GetPatientModel(string name, string surname);
         public void CreateAppointment(PatientModel patientModel, DoctorModel doctorModel, AppointmentTimeModel appointmentTimeModel);
-        public ICollection<AppointmentTimeModel> GetListFreeTimesDoctor(DoctorModel doctorModel);
+        public AppointmentModel? GetAppointmentModel(int id);
+        public ICollection<AppointmentModel> GetAppointmentModelsByDoctorId(int doctorId);
     }
 }

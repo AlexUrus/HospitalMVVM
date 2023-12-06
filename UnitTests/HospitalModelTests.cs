@@ -88,7 +88,7 @@ namespace UnitTests
         public void GetListFreeTimesDoctor()
         {
             // Arrange
-            _repositoryMock.Setup(a => a.GetListFreeTimesDoctor(_doctorModels[0])).Returns(_appointmentTimeModels);
+           // _repositoryMock.Setup(a => a.GetAppTimesDoctor(_doctorModels[0])).Returns(_appointmentTimeModels);
 
             // Act
             ICollection<AppointmentTimeModel> listFreeTimesDoctor = _hospitalModel.GetListFreeTimesDoctor(_doctorModels[0]);
