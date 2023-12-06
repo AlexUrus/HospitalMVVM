@@ -22,7 +22,6 @@ namespace UnitTests
 
         public HospitalModelTests()
         {
-            _repositoryMock = new Mock<IRepository>();
             _typeDoctorModels = new List<TypeDoctorModel>
             {
                 new TypeDoctorModel(1,"Терапевт")
@@ -35,6 +34,8 @@ namespace UnitTests
             {
                 new AppointmentTimeModel(1,new TimeSpan(10,00,00),new TimeSpan(10,30,00))
             };
+
+            _repositoryMock = new Mock<IRepository>();           
 
             _namePatient = "Peter";
             _surnamePatient = "Griffin";
@@ -73,7 +74,8 @@ namespace UnitTests
         {
             // Arrange
             _repositoryMock.Setup(a => a.CreatePatient(_namePatient, _surnamePatient));
-            _repositoryMock.Setup(a => a.GetPatientModel(_namePatient, _surnamePatient)).Returns(new PatientModel(1, _namePatient, _surnamePatient));
+            _repositoryMock.Setup(a => a.GetPatientModel(_namePatient, _surnamePatient))
+                           .Returns(new PatientModel(1, _namePatient, _surnamePatient));
 
             // Act
             PatientModel? patient = _hospitalModel.CreatePatient(_namePatient, _surnamePatient);
