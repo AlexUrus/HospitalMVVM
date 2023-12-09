@@ -25,9 +25,9 @@ namespace Model.Data.Repositories
             {
                 Appointment appointment = new Appointment()
                 {
-                    Patient = ConverterModelToEF.Convert(patientModel),
-                    Doctor = ConverterModelToEF.Convert(doctorModel),
-                    AppointmentTime = ConverterModelToEF.Convert(appointmentTimeModel)
+                    PatientId = patientModel.Id,
+                    DoctorId = doctorModel.Id,
+                    AppointmentTimeId  = appointmentTimeModel.Id
                 };
 
                 _context.ChangeTracker.Clear();
@@ -65,7 +65,13 @@ namespace Model.Data.Repositories
             ICollection<AppointmentModel> appointmentModels = new List<AppointmentModel>();
             try
             {
-                ICollection<Appointment> appointments = _context.Appointments.Where(a => a.Id == doctorId).ToList();
+                ICollection<Appointment> appointments = _context.Appointments
+                                                        .Where(a => a.DoctorId == doctorId)
+                                                        .Include(a => a.Doctor)
+                                                        .Include (a => a.Patient)
+                                                        .Include (a => a.AppointmentTime)
+                                                        .ToList();
+
                 foreach (var appointment in appointments)
                 {
                     TypeDoctorModel typeDoctorModel = new TypeDoctorModel(appointment.Doctor.Type.Id, appointment.Doctor.Type.Type);
