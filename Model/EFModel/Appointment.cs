@@ -16,7 +16,6 @@ namespace Model.EFModel
         [ForeignKey("Doctor")]
         public int DoctorId { get; set; }
 
-        [ForeignKey("Patient")]
         public Patient Patient { get; set; }
 
         [ForeignKey("Patient")]
