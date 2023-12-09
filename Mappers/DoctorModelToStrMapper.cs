@@ -14,7 +14,7 @@ namespace Mappers
 
         public string ModelToString(DoctorModel doctor)
         {
-            string str = $"{doctor.Name} {doctor.Surname} {doctor.Type}";
+            string str = $"{doctor.Name} {doctor.Surname} {doctor.Type.Type}";
             keyValuePairs.Add(str, doctor);
             return str;
         }
