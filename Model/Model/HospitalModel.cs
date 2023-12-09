@@ -51,7 +51,8 @@ namespace Model.Model
 
             foreach (var item in listAppointmentsModelsDoctor)
             {
-                listFreeTimesDoctor.Remove(item.AppointmentTimeModel);
+                var itemToRemove = listFreeTimesDoctor.FirstOrDefault(a => a.Id == item.AppointmentTimeModel.Id);
+                listFreeTimesDoctor.Remove(itemToRemove);
             }
 
             return listFreeTimesDoctor;
