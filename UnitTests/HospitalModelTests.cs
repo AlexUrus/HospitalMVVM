@@ -19,6 +19,7 @@ namespace UnitTests
         private List<AppointmentTimeModel> _appointmentTimeModels;
         private string _namePatient;
         private string _surnamePatient;
+        AppointmentTimeModel _expectedAppointmentTimeModel;
 
         public HospitalModelTests()
         {
@@ -30,9 +31,11 @@ namespace UnitTests
             {
                 new DoctorModel(1,"Александр","Урусов",_typeDoctorModels[0])
             };
+            _expectedAppointmentTimeModel = new AppointmentTimeModel(2, new TimeSpan(10, 30, 00), new TimeSpan(11, 00, 00));
             _appointmentTimeModels = new List<AppointmentTimeModel>
             {
-                new AppointmentTimeModel(1,new TimeSpan(10,00,00),new TimeSpan(10,30,00))
+                new AppointmentTimeModel(1,new TimeSpan(10,00,00),new TimeSpan(10,30,00)),
+                _expectedAppointmentTimeModel
             };
 
             _repositoryMock = new Mock<IRepository>();           
@@ -88,13 +91,26 @@ namespace UnitTests
         public void GetListFreeTimesDoctor()
         {
             // Arrange
-           // _repositoryMock.Setup(a => a.GetAppTimesDoctor(_doctorModels[0])).Returns(_appointmentTimeModels);
+            PatientModel patientModel = new PatientModel(1, "Вова", "Сидоров");
+            ICollection<AppointmentModel> _appointmentModels = new List<AppointmentModel>()
+            {
+                new AppointmentModel(1,_doctorModels[0],patientModel,_appointmentTimeModels[0])
+            };
+            _repositoryMock.Setup(a => a.GetAppointmentModelsByDoctorId(_doctorModels[0].Id))
+                                                           .Returns(_appointmentModels);
+            ICollection<AppointmentTimeModel> proveListFreeTimeDoctor = new List<AppointmentTimeModel>()
+            {
+                _expectedAppointmentTimeModel
+            };
 
             // Act
             ICollection<AppointmentTimeModel> listFreeTimesDoctor = _hospitalModel.GetListFreeTimesDoctor(_doctorModels[0]);
 
+            AppointmentTimeModel actualAppointmentTimeModel = listFreeTimesDoctor.FirstOrDefault();
+            AppointmentTimeModel expectedAppointmentTimeModel = _appointmentTimeModels.First(x => x.Id == 2);
+
             // Assert
-            Assert.NotEmpty(listFreeTimesDoctor);
+            Assert.Equal(expectedAppointmentTimeModel,actualAppointmentTimeModel);
         }
     }
 }
