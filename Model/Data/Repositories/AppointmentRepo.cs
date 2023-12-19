@@ -67,7 +67,7 @@ namespace Model.Data.Repositories
             {
                 ICollection<Appointment> appointments = _context.Appointments
                                                         .Where(a => a.DoctorId == doctorId)
-                                                        .Include(a => a.Doctor)
+                                                        .Include(a => a.Doctor).Include(a => a.Doctor.Type)
                                                         .Include (a => a.Patient)
                                                         .Include (a => a.AppointmentTime)
                                                         .ToList();
