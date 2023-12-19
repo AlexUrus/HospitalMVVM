@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Reactive.Linq;
 using Mappers;
+using DynamicData.Binding;
+using System.ComponentModel;
 
 namespace ViewModel
 {
@@ -26,11 +28,22 @@ namespace ViewModel
         private AppointmentTimeModelToStrMapper _appointmentTimeModelToStrMapper;
         private TypeDoctorModelToStrMapper _typeDoctorModelToStrMapper;
 
+        private ObservableCollection<string> _doctorModels;
+        private ObservableCollection<string> _appointmentTimeModels;
         #endregion
 
         #region Properties
-        public ObservableCollection<string> DoctorModels { get; set; }
-        public ObservableCollection<string> AppointmentTimeModels { get; set; }
+
+        public ObservableCollection<string> DoctorModels
+        {
+            get => _doctorModels;
+            private set => this.RaiseAndSetIfChanged(ref _doctorModels, value);
+        }
+        public ObservableCollection<string> AppointmentTimeModels
+        {
+            get => _appointmentTimeModels;
+            private set => this.RaiseAndSetIfChanged(ref _appointmentTimeModels, value);
+        }
         public PatientViewModel PatientViewModel
         {
             get => _patientViewModel;
@@ -86,7 +99,7 @@ namespace ViewModel
         public ReactiveCommand<Unit, Unit> CreateAppointmentCommand { get; }
         #endregion
 
-        #region Constructors
+        #region Constructor
         public HospitalViewModel(HospitalModel hospitalModel)
         {
             InitViewModels();
@@ -135,11 +148,9 @@ namespace ViewModel
 
         private void InitAndSubscribeUpdateListTakenTimesDoctor()
         {
-            var combinedPropertiesUpdateCanCreate = this.WhenAnyValue(
-               x => x._doctorViewModel.Doctor);
+            var doctorChanges = this.WhenAnyValue(x => x._doctorViewModel.Doctor);
 
-            combinedPropertiesUpdateCanCreate
-                .Subscribe(_ => UpdateListFreeTimesDoctor());
+            doctorChanges.Subscribe(_ => UpdateListFreeTimesDoctor());
         }
         #endregion
 
@@ -170,10 +181,12 @@ namespace ViewModel
             {
                 _doctorViewModel.ListFreeTimesDoctor = new ObservableCollection<AppointmentTimeModel>
                     (_hospitalModel.GetListFreeTimesDoctor(_doctorViewModel.Doctor));
+                AppointmentTimeModels = new ObservableCollection<string>(ConvertModelListToString(_doctorViewModel.ListFreeTimesDoctor));
             }
             else
             {
                 _doctorViewModel.ListFreeTimesDoctor = new ObservableCollection<AppointmentTimeModel>();
+                AppointmentTimeModels = new ObservableCollection<string>(ConvertModelListToString(_doctorViewModel.ListFreeTimesDoctor));
             }
         }
 
