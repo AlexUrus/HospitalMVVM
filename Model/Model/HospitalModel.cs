@@ -19,9 +19,9 @@ namespace Model.Model
 
         public string CallCreateAppointment(PatientModel? patientModel, DoctorModel doctorModel, AppointmentTimeModel appointmentTimeModel)
         {
-            if (patientModel != null)
+            if (patientModel != null )
             {
-                CreateAppointment(patientModel, doctorModel, appointmentTimeModel);
+                CreateAppointmentModel(patientModel, doctorModel, appointmentTimeModel);
                 return "OK";
             }
             else
@@ -103,7 +103,7 @@ namespace Model.Model
             return _repository.PatientExists(name, surname);
         }
 
-        private void CreateAppointment(PatientModel patientModel, DoctorModel doctorModel, AppointmentTimeModel appointmentTimeModel)
+        private void CreateAppointmentModel(PatientModel patientModel, DoctorModel doctorModel, AppointmentTimeModel appointmentTimeModel)
         { 
             _repository.CreateAppointment(patientModel, doctorModel, appointmentTimeModel);
         }
