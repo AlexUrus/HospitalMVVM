@@ -12,10 +12,13 @@ namespace Mappers
     {
         private Dictionary<string,DoctorModel> keyValuePairs = new Dictionary<string,DoctorModel>();
 
-        public string ModelToString(DoctorModel doctor)
+        public string ModelToString(DoctorModel model)
         {
-            string str = $"{doctor.Name} {doctor.Surname} {doctor.Type.Type}";
-            keyValuePairs.Add(str, doctor);
+            string str = $"{model.Name} {model.Surname} {model.Type.Type}";
+            if (!keyValuePairs.ContainsKey(str))
+            {
+                keyValuePairs.Add(str, model);
+            }
             return str;
         }
 

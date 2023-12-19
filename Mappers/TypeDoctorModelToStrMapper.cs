@@ -14,7 +14,10 @@ namespace Mappers
         public string ModelToString(TypeDoctorModel model)
         {
             string str = model.Type;
-            keyValuePairs.Add(str, model);
+            if (!keyValuePairs.ContainsKey(str))
+            {
+                keyValuePairs.Add(str, model);
+            }
             return str;
         }
 
