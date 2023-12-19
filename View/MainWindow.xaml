@@ -4,41 +4,51 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:ViewModel;assembly=ViewModel"
-        xmlns:UserControls="clr-namespace:View"
+        xmlns:UserControls="clr-namespace:View" xmlns:HelixToolkit="http://helix-toolkit.org/wpf"
         mc:Ignorable="d"
-        Title="Hospital"  Height="650" Width="400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="Hospital"  Height="650" Width="955" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibility"/>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="40*"/>
-            <ColumnDefinition Width="56*"/>
-            <ColumnDefinition Width="140*"/>
-            <ColumnDefinition Width="56*"/>
-            <ColumnDefinition Width="40*"/>
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="15*"/>
+            <ColumnDefinition Width="41*"/>
+            <ColumnDefinition Width="14*"/>
+            <ColumnDefinition Width="13*"/>
+            <ColumnDefinition Width="92*"/>
+            <ColumnDefinition Width="11*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30*"/>
             <RowDefinition Height="365*"/>
             <RowDefinition Height="40*"/>
         </Grid.RowDefinitions>
+        <Grid.Background>
+            <ImageBrush ImageSource="\Resources\doctor.png" Opacity="0.2"/>
+        </Grid.Background>
 
-        <StackPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Grid.RowSpan="2" >
+        <StackPanel x:Name="MainStackPanel" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Grid.RowSpan="2" Margin="15,0,0,0" >
+            
             <Label Content="Введите имя:" Height="27" FontSize="14"/>
             <TextBox x:Name="NameTextBox" Height="27" Text="{Binding PatientViewModel.PatientName}" FontSize="14" />
             <Label Content="Введите фамилию:"  Height="27" FontSize="14"/>
             <TextBox x:Name="SurnameTextBox" Height="27" Text="{Binding PatientViewModel.PatientSurname}" FontSize="14"/>
             <Label Content="Выберите врача:" Height="27" FontSize="14"/>
-            <ComboBox Height="27" FontSize="14" ItemsSource="{Binding DoctorModels}" SelectedItem="{Binding SelectedDoctor}"/>
+            <ComboBox x:Name="SelectDoctorComboBox" Height="27" FontSize="14" ItemsSource="{Binding DoctorModels}" SelectedItem="{Binding SelectedDoctor}"/>
             <Label Content="Выберите время приема:" Height="27" FontSize="14"/>
-            <ComboBox Height="27" FontSize="14" ItemsSource="{Binding AppointmentTimeModels}" SelectedItem="{Binding SelectedAppointmetTime}"/>
-
+            <ComboBox x:Name="SelectPatientComboBox" Height="27" FontSize="14" ItemsSource="{Binding AppointmentTimeModels}" SelectedItem="{Binding SelectedAppointmetTime}"/>
         </StackPanel>
-        <StackPanel Grid.Row="1" Grid.Column="2" VerticalAlignment="Bottom">
+        <StackPanel Grid.Row="1" Grid.Column="2" VerticalAlignment="Top" Height="178" Margin="6,354,19,0" Grid.RowSpan="2">
             <UserControls:MessageView Grid.Column="2" Grid.Row="1" VerticalAlignment="Bottom" BorderBrush="Gray" BorderThickness="1" Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibility}}" DataContext="{Binding MessageViewModel}"/>
             <Separator Height="27" Opacity="0"/>
             <Button Height="27" FontSize="14" Content="Записаться на прием" Command="{Binding CreateAppointmentCommand}" IsEnabled="{Binding CanCreateAppointment}" />
         </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="5">
+            <UserControls:VideoBox Height="300"/>
+            <UserControls:ViewPort Height="230"/>
+        </StackPanel>
+
     </Grid>
 </Window>
