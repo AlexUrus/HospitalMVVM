@@ -4,8 +4,6 @@ using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Reactive.Linq;
 using Mappers;
-using DynamicData.Binding;
-using System.ComponentModel;
 
 namespace ViewModel
 {
