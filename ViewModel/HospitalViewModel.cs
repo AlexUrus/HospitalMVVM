@@ -122,8 +122,8 @@ namespace ViewModel
         private void InitModels(HospitalModel hospitalModel)
         {
             _hospitalModel = hospitalModel;
-            AppointmentTimeModels = new ObservableCollection<string>(ConvertModelListToString(_hospitalModel.AppointmentTimeModels));
-            DoctorModels = new ObservableCollection<string>(ConvertModelListToString(_hospitalModel.DoctorModels));
+            AppointmentTimeModels = new ObservableCollection<string>(Mapper.ConvertModelListToString(_hospitalModel.AppointmentTimeModels));
+            DoctorModels = new ObservableCollection<string>(Mapper.ConvertModelListToString(_hospitalModel.DoctorModels));
         }
 
         public void InitMappers()
@@ -179,12 +179,12 @@ namespace ViewModel
             {
                 _doctorViewModel.ListFreeTimesDoctor = new ObservableCollection<AppointmentTimeModel>
                     (_hospitalModel.GetListFreeTimesDoctor(_doctorViewModel.Doctor));
-                AppointmentTimeModels = new ObservableCollection<string>(ConvertModelListToString(_doctorViewModel.ListFreeTimesDoctor));
+                AppointmentTimeModels = new ObservableCollection<string>(Mapper.ConvertModelListToString(_doctorViewModel.ListFreeTimesDoctor));
             }
             else
             {
                 _doctorViewModel.ListFreeTimesDoctor = new ObservableCollection<AppointmentTimeModel>();
-                AppointmentTimeModels = new ObservableCollection<string>(ConvertModelListToString(_doctorViewModel.ListFreeTimesDoctor));
+                AppointmentTimeModels = new ObservableCollection<string>(Mapper.ConvertModelListToString(_doctorViewModel.ListFreeTimesDoctor));
             }
         }
 
@@ -205,35 +205,6 @@ namespace ViewModel
         private void ShowMessageView(string message, string type)
         {
             _messageViewModel.ShowMessage(message, type);
-        }
-
-        private ICollection<string> ConvertModelListToString<Model>(ICollection<Model> models) where Model: class
-        {
-            List<string> listDoctorModelStrings = new List<string>();
-
-            foreach (var model in models)
-            {
-                listDoctorModelStrings.Add(ModelToString(model));
-            }
-
-            return listDoctorModelStrings;
-        }
-
-        private string ModelToString(object model)
-        {
-            if (model is DoctorModel doctor)
-            {
-                return _doctorModelToStrMapper.ModelToString(doctor);
-            }
-            if (model is AppointmentTimeModel appointmentTime)
-            {
-                return _appointmentTimeModelToStrMapper.ModelToString(appointmentTime);
-            }
-            if(model is TypeDoctorModel typeDoctor)
-            {
-                return _typeDoctorModelToStrMapper.ModelToString(typeDoctor);
-            }
-            return "Unknown";
         }
     }
 }
