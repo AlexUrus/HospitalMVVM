@@ -6,31 +6,40 @@
         xmlns:vm="clr-namespace:ViewModel;assembly=ViewModel"
         xmlns:UserControls="clr-namespace:View" xmlns:HelixToolkit="http://helix-toolkit.org/wpf"
         mc:Ignorable="d"
-        Title="Hospital"  Height="650" Width="955" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="Hospital"  Height="595" Width="405" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibility"/>
+        <Image x:Key="volumeOff" Source="/Resources/volumeOff.png"/>
+        <Image x:Key="volumeOn" Source="/Resources/volumeOn.png" Height="auto" Width="auto"/>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5*"/>
-            <ColumnDefinition Width="15*"/>
-            <ColumnDefinition Width="41*"/>
-            <ColumnDefinition Width="14*"/>
-            <ColumnDefinition Width="13*"/>
-            <ColumnDefinition Width="92*"/>
+            <ColumnDefinition Width="9*"/>
             <ColumnDefinition Width="11*"/>
+            <ColumnDefinition Width="39*"/>
+            <ColumnDefinition Width="13*"/>
+            <ColumnDefinition Width="9*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30*"/>
-            <RowDefinition Height="365*"/>
-            <RowDefinition Height="40*"/>
+            <RowDefinition Height="8*"/>
+            <RowDefinition Height="170*"/>
+            <RowDefinition Height="15*"/>
         </Grid.RowDefinitions>
         <Grid.Background>
             <ImageBrush ImageSource="\Resources\doctor.png" Opacity="0.2"/>
         </Grid.Background>
+        <Menu Grid.ColumnSpan="5" FontSize="14" Height="auto">
+            <MenuItem x:Name="DoctorsShedule_MenuItem" Header="Расписание врачей" Height="auto" Click="DoctorsShedule_MenuItem_Click"/>
+            <MenuItem Header="Контакты" Height="auto"/>
+            <MenuItem Header="Информация о нас" Height="auto"/>
+            <MenuItem x:Name="volumeMenuItem" Click="VolumeMenuItem_Click" Width="31">
+                <MenuItem.Icon>
+                    <StaticResource ResourceKey="volumeOn"/>
+                </MenuItem.Icon>
+            </MenuItem>
+        </Menu>
+        <StackPanel x:Name="MainStackPanel" Grid.Column="1" Grid.ColumnSpan="3" Grid.RowSpan="2" Margin="0,1,0,0" Grid.Row="1" >
 
-        <StackPanel x:Name="MainStackPanel" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Grid.RowSpan="2" Margin="15,0,0,0" >
-            
             <Label Content="Введите имя:" Height="27" FontSize="14"/>
             <TextBox x:Name="NameTextBox" Height="27" Text="{Binding PatientViewModel.PatientName}" FontSize="14" />
             <Label Content="Введите фамилию:"  Height="27" FontSize="14"/>
@@ -40,15 +49,11 @@
             <Label Content="Выберите время приема:" Height="27" FontSize="14"/>
             <ComboBox x:Name="SelectPatientComboBox" Height="27" FontSize="14" ItemsSource="{Binding AppointmentTimeModels}" SelectedItem="{Binding SelectedAppointmetTime}"/>
         </StackPanel>
-        <StackPanel Grid.Row="1" Grid.Column="2" VerticalAlignment="Top" Height="178" Margin="6,354,19,0" Grid.RowSpan="2">
+        <StackPanel Grid.Row="1" Grid.Column="2" VerticalAlignment="Top" Height="178" Margin="0,317,0,0">
             <UserControls:MessageView Grid.Column="2" Grid.Row="1" VerticalAlignment="Bottom" BorderBrush="Gray" BorderThickness="1" Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibility}}" DataContext="{Binding MessageViewModel}"/>
             <Separator Height="27" Opacity="0"/>
             <Button Height="27" FontSize="14" Content="Записаться на прием" Command="{Binding CreateAppointmentCommand}" IsEnabled="{Binding CanCreateAppointment}" />
         </StackPanel>
-        <StackPanel Grid.Row="1" Grid.Column="5">
-            <UserControls:VideoBox Height="300"/>
-            <UserControls:ViewPort Height="230"/>
-        </StackPanel>
-
+        <MediaElement Volume="0.5" LoadedBehavior="Manual" UnloadedBehavior="Manual" Name="AudioElement" Source="Resources\backgroundMusic.mp3"/>
     </Grid>
 </Window>

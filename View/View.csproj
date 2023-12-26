@@ -8,8 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\backgroundMusic.mp3" />
     <None Remove="Resources\clinica.mp4" />
     <None Remove="Resources\doctor.png" />
+    <None Remove="Resources\volumeOff.png" />
+    <None Remove="Resources\volumeOn.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,12 +25,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Resources\backgroundMusic.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\clinica.mp4">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Resource Include="Resources\doctor.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Content Include="Resources\volumeOff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\volumeOn.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
