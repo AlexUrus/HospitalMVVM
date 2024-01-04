@@ -1,5 +1,6 @@
 ﻿using Model.EFModel;
 using Model.Model;
+using Model.TableFields;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,5 +23,6 @@ namespace Model.Data
         public void CreateAppointment(PatientModel patientModel, DoctorModel doctorModel, AppointmentTimeModel appointmentTimeModel);
         public AppointmentModel? GetAppointmentModel(int id);
         public ICollection<AppointmentModel> GetAppointmentModelsByDoctorId(int doctorId);
+        public List<DoctorShedule> GetSheduleDoctor();
     }
 }

@@ -10,7 +10,7 @@ namespace Mappers
 {
     public class DoctorModelToStrMapper: IMapperModelToStr<DoctorModel>
     {
-        private Dictionary<string,DoctorModel> keyValuePairs = new Dictionary<string,DoctorModel>();
+        private static Dictionary<string,DoctorModel> keyValuePairs = new Dictionary<string,DoctorModel>();
 
         public string ModelToString(DoctorModel model)
         {

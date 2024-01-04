@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace View
 {
     /// <summary>
-    /// Логика взаимодействия для ContactsWindow.xaml
+    /// Логика взаимодействия для MainPage.xaml
     /// </summary>
-    public partial class ContactsWindow : Window
+    public partial class MainPage : Page
     {
-        public ContactsWindow()
+        public MainPage()
         {
             InitializeComponent();
         }

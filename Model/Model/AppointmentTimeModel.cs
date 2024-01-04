@@ -15,5 +15,9 @@ namespace Model.Model
             EndTime = endTime;
         }
 
+        public override string ToString()
+        {
+            return $"c {StartTime} до {EndTime}";
+        }
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Reactive.Linq;
 using Mappers;
+using ViewModel.Models;
 
 namespace ViewModel
 {
@@ -14,6 +15,7 @@ namespace ViewModel
         private PatientViewModel _patientViewModel;
         private DoctorViewModel _doctorViewModel;
         private AppointmentTimeViewModel _appointmentTimeViewModel;
+        private DoctorSheduleViewModel _doctorSheduleViewModel;
 
         private MessageViewModel _messageViewModel;
 
@@ -56,6 +58,11 @@ namespace ViewModel
         {
             get => _appointmentTimeViewModel;
             private set => this.RaiseAndSetIfChanged(ref _appointmentTimeViewModel, value);
+        }
+        public DoctorSheduleViewModel DoctorSheduleViewModel
+        {
+            get => _doctorSheduleViewModel;
+            private set => this.RaiseAndSetIfChanged(ref _doctorSheduleViewModel, value);
         }
 
         public MessageViewModel MessageViewModel
@@ -117,6 +124,7 @@ namespace ViewModel
             _patientViewModel = new PatientViewModel();
             _doctorViewModel = new DoctorViewModel();
             _appointmentTimeViewModel = new AppointmentTimeViewModel();
+            _doctorSheduleViewModel = new DoctorSheduleViewModel();
         }
 
         private void InitModels(HospitalModel hospitalModel)
@@ -126,7 +134,7 @@ namespace ViewModel
             DoctorModels = new ObservableCollection<string>(Mapper.ConvertModelListToString(_hospitalModel.DoctorModels));
         }
 
-        public void InitMappers()
+        private void InitMappers()
         {
             _appointmentTimeModelToStrMapper = new AppointmentTimeModelToStrMapper();
             _doctorModelToStrMapper = new DoctorModelToStrMapper();
@@ -151,6 +159,24 @@ namespace ViewModel
             doctorChanges.Subscribe(_ => UpdateListFreeTimesDoctor());
         }
         #endregion
+
+        public List<DoctorSheduleTableField> GetSheduleDoctors()
+        {
+            List<DoctorSheduleTableField> sheduleTableFields = new List<DoctorSheduleTableField>();
+            var doctorShedules = _hospitalModel.GetSheduleDoctors();
+            foreach (var item in doctorShedules)
+            {
+                sheduleTableFields.Add(new DoctorSheduleTableField()
+                {
+                    Часы_приема = item.AppointmentTime,
+                    Id = item.Id,
+                    Фамилия = item.Surname,
+                    Имя = item.Name,
+                });
+            }
+
+            return sheduleTableFields;
+        }
 
         private void CallCreateAppointment()
         {

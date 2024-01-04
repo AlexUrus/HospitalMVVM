@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <PackageReference Include="HelixToolkit.Wpf" Version="2.24.0" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2210.55" />
     <PackageReference Include="ReactiveUI.WPF" Version="19.4.1" />
   </ItemGroup>
 

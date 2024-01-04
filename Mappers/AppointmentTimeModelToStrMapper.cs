@@ -4,7 +4,7 @@ namespace Mappers
 {
     public class AppointmentTimeModelToStrMapper : IMapperModelToStr<AppointmentTimeModel>
     {
-        private Dictionary<string, AppointmentTimeModel> keyValuePairs = new Dictionary<string, AppointmentTimeModel>();
+        private static Dictionary<string, AppointmentTimeModel> keyValuePairs = new Dictionary<string, AppointmentTimeModel>();
 
         public string ModelToString(AppointmentTimeModel model)
         {

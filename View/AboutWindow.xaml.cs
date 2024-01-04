@@ -11,19 +11,17 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using ViewModel;
 
 namespace View
 {
     /// <summary>
-    /// Логика взаимодействия для DoctorsSheduleWindow.xaml
+    /// Логика взаимодействия для AboutWindow.xaml
     /// </summary>
-    public partial class DoctorsSheduleWindow : Window
+    public partial class AboutWindow : Window
     {
-        public DoctorsSheduleWindow(DoctorSheduleViewModel doctorSheduleViewModel)
+        public AboutWindow()
         {
             InitializeComponent();
-            DataContext = doctorSheduleViewModel;
         }
     }
 }

@@ -30,10 +30,8 @@ namespace View
             IRepository repository = new HospitalRepository(appointmentRepo, appointmentTimeRepo,
                                                             doctorRepo, patientRepo, typeDoctorRepo);
             HospitalModel hospitalModel = new HospitalModel(repository);
-            var w = new MainWindow
-            {
-                DataContext = new HospitalViewModel(hospitalModel)
-            };
+            HospitalViewModel hospitalViewModel = new HospitalViewModel(hospitalModel);
+            var w = new MainWindow(hospitalViewModel);
 
             w.Show();
         }

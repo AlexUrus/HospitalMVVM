@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Model.Data;
+using Model.Model;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -11,15 +13,14 @@ namespace ViewModel
 {
     public class DoctorSheduleViewModel : BaseViewModel
     {
-        public ObservableCollection<DoctorSheduleTableField> DoctorSheduleTableFields { get; set; }
+        public ObservableCollection<DoctorSheduleTableField> DoctorSheduleTableFields { get; private set; }
         
-        public DoctorSheduleViewModel()
-        {
-        }
+        public DoctorSheduleViewModel() { }
 
-        private void InitDoctorSheduleModels()
+
+        public void SetDoctorShedule(List<DoctorSheduleTableField> sheduleTableFields)
         {
-            DoctorSheduleTableFields = 
+            DoctorSheduleTableFields = new ObservableCollection<DoctorSheduleTableField>( sheduleTableFields);
         }
     }
 }

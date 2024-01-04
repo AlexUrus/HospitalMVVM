@@ -1,5 +1,6 @@
 ﻿using Model.Data;
 using Model.Data.Repositories;
+using Model.TableFields;
 using System.Collections.ObjectModel;
 
 namespace Model.Model
@@ -58,20 +59,9 @@ namespace Model.Model
             return listFreeTimesDoctor;
         }
 
-        public Dictionary<DoctorModel,AppointmentModel?> GetSheduleDoctors()
+        public List<DoctorShedule> GetSheduleDoctors()
         {
-            Dictionary<DoctorModel, List<AppointmentModel>> sheduleDoctors = new();
-
-            foreach (DoctorModel doctorModel in DoctorModels)
-            {
-                ICollection<AppointmentModel> listAppointmentsModelsDoctor = _repository.GetAppointmentModelsByDoctorId(doctorModel.Id);
-
-                foreach (AppointmentModel appointmentModel in listAppointmentsModelsDoctor)
-                {
-
-                }
-            }
-            
+           return _repository.GetSheduleDoctor();
         }
 
         private void Init()

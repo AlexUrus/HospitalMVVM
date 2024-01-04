@@ -22,8 +22,21 @@ namespace View
     /// </summary>
     public partial class MainWindow : Window
     {
-
+        private HospitalViewModel _viewModel;
+        public HospitalViewModel ViewModel
+        {
+            get
+            {
+                return _viewModel;
+            }
+            set
+            {
+                _viewModel = value;
+            }
+        }
         private bool _isVolumeOn = true;
+
+        private Page _mainPage;
 
         public bool IsVolumeOn
         {
@@ -44,9 +57,14 @@ namespace View
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        public MainWindow()
+
+        public MainWindow(HospitalViewModel viewModel)
         {
             InitializeComponent();
+            ViewModel = viewModel;
+            _mainPage = new MainPage();
+            _mainPage.DataContext = ViewModel;
+            MainFrame.Content = _mainPage;
             AudioElement.Play();
         }
 
@@ -57,13 +75,30 @@ namespace View
 
             IsVolumeOn = !IsVolumeOn;
         }
-
+        
         private void DoctorsShedule_MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var doctorsSheduleWindow = new DoctorsSheduleWindow();
             var doctorSheduleViewModel = new DoctorSheduleViewModel();
-            doctorsSheduleWindow.DataContext = doctorSheduleViewModel;
-            doctorsSheduleWindow.Show();
+            doctorSheduleViewModel.SetDoctorShedule(ViewModel.GetSheduleDoctors());
+            var doctorsShedulePage = new DoctorsShedulePage();
+            doctorsShedulePage.DataContext = doctorSheduleViewModel;
+            MainFrame.Content = doctorsShedulePage;
+        }
+
+        private void Contacts_MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Content = new ContactsPage();
+        }
+
+        private void About_MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var aboutWindow = new AboutWindow();
+            aboutWindow.Show();
+        }
+
+        private void MainPage_menuItem_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Content = _mainPage;
         }
     }
 }

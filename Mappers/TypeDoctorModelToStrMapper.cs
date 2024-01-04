@@ -9,7 +9,7 @@ namespace Mappers
 {
     public class TypeDoctorModelToStrMapper : IMapperModelToStr<TypeDoctorModel>
     {
-        private Dictionary<string, TypeDoctorModel> keyValuePairs = new Dictionary<string, TypeDoctorModel>();
+        private static Dictionary<string, TypeDoctorModel> keyValuePairs = new Dictionary<string, TypeDoctorModel>();
 
         public string ModelToString(TypeDoctorModel model)
         {

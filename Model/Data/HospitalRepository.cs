@@ -1,7 +1,9 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.VisualBasic;
 using Model.Data.Interfaces;
 using Model.EFModel;
 using Model.Model;
+using Model.TableFields;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,6 +25,29 @@ namespace Model.Data
             _doctorRepo = doctorRepo;
             _patientRepo = patientRepo;
             _typeDoctorRepo = typeDoctorRepo;
+        }
+
+        public List<DoctorShedule>  GetSheduleDoctor()
+        {
+            List<DoctorShedule> sheduleDoctors = new List<DoctorShedule>();
+
+            var doctorModels = GetDoctorModels();
+            var appointmentTimes = GetAppointmentTimes();
+
+            foreach (var doctorModel in doctorModels)
+            {
+                foreach (var appointmentTime in appointmentTimes)
+                {
+                    sheduleDoctors.Add(new DoctorShedule()
+                    {
+                        Id = doctorModel.Id,
+                        AppointmentTime = appointmentTime.ToString(),
+                        Surname = doctorModel.Surname,
+                        Name = doctorModel.Name
+                    });
+                }
+            }
+            return sheduleDoctors;
         }
 
         public void CreateAppointment(PatientModel patientModel, DoctorModel doctorModel, AppointmentTimeModel appointmentTimeModel)

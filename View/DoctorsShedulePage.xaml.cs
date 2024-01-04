@@ -10,20 +10,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
-using ViewModel;
 
 namespace View
 {
     /// <summary>
-    /// Логика взаимодействия для DoctorsSheduleWindow.xaml
+    /// Логика взаимодействия для DoctorsShedulePage.xaml
     /// </summary>
-    public partial class DoctorsSheduleWindow : Window
+    public partial class DoctorsShedulePage : Page
     {
-        public DoctorsSheduleWindow(DoctorSheduleViewModel doctorSheduleViewModel)
+        public DoctorsShedulePage()
         {
             InitializeComponent();
-            DataContext = doctorSheduleViewModel;
         }
     }
 }
